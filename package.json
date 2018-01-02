@@ -1,0 +1,12 @@
+{
+  "name": "article-editor",
+  "version": "0.0.0",
+  "description": "Article Editor",
+  "main": "server.js",
+  "author": {
+    "name": "Genbu Hase"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
