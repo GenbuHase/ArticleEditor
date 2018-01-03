@@ -1,0 +1,37 @@
+<!DocType HTML>
+
+<HTML>
+	<Head>
+		<Meta Charset = "UTF-8" />
+		<Meta Name = "Viewport" Content = "Width=Device-Width, Initial-Scale=1" />
+		<Title>${title} | どっかのプログラなーいのブログ。</Title>
+		<Link Rel = "Shortcut Icon" Href = "favicon.ico" />
+
+		<Script Src = "/assets/includes/DOM Extender v3.4.js"></Script>
+		<Script Src = "/assets/includes/material-components-web.min.js"></Script>
+		<Link Rel = "StyleSheet" Href = "/assets/includes/material-components-web.min.css" />
+
+		<Script Src = "/assets/includes/common/common.js"></Script>
+		<Link Rel = "StyleSheet" Href = "/assets/includes/common/common.css" />
+
+		<Script Src = "Drawing.js" Defer = "Defer"></Script>
+		<Link Rel = "StyleSheet" Href = "Drawing.css" />
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<Script Src = "https://www.googletagmanager.com/gtag/js?id=UA-111257667-1" Async = "Async"></Script>
+		<Script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag () { dataLayer.push(arguments) }
+			
+			gtag('js', new Date());
+			gtag('set', {'user_id': 'USER_ID'}); // ログインしている user_id を使用してUser-ID を設定します。
+			gtag('config', 'UA-111257667-1');
+		</Script>
+	</Head>
+
+	<Body>
+		<Main>
+			<H1 Class = "mdc-typograhy--headline">${title}</H1>
+		</Main>
+	</Body>
+</HTML>
