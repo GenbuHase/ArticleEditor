@@ -9,36 +9,41 @@
 		<Link Rel = "StyleSheet" Href = "assets/includes/Material Icons/material-icons.css" />
 		<Link Rel = "StyleSheet" Href = "assets/includes/Material Icons Extended/material-icons-extended.css" />
 
-		<Script Src = "assets/includes/material-components-web.min.js"></Script>
-		<Link Rel = "StyleSheet" Href = "assets/includes/material-components-web.min.css" />
+		<Script Src = "assets/includes/Materialize/js/materialize.min.js"></Script>
+		<Link Rel = "StyleSheet" Href = "assets/includes/Materialize/css/materialize.min.css" />
 
 		<Script Src = "assets/main.js" Defer = "Defer"></Script>
 		<Link Rel = "stylesheet" Href = "assets/main.css" />
 	</Head>
 	
 	<Body>
-		<Header Class = "mdc-toolbar mdc-toolbar--fixed mdc-toolbar--waterfall mdc-elevation--z4">
-			<Div Class = "mdc-toolbar__row">
-				<Section Class = "mdc-toolbar__section mdc-toolbar__section--align-start">
-					<Span Class = "mdc-toolbar__title">Article Editor</Span>
+		<Nav>
+			<Span Class = "brand-logo center" Href = "#">Article Editor</Span>
+		</Nav>
+
+		<Main>
+			<Summary>
+				このツールは、ブログ形式サイトのための記事編集ツールです。
+			</Summary>
+
+			<Section ID = "Editor">
+				<Section ID = "Editor_Info">
+					<Div Class = "input-field">
+						<Input ID = "Editor_Info_Title" Class = "validate" Type = "Text" />
+						<Label For = "Editor_Info_Title">記事タイトル</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<Input ID = "Editor_Info_CreatedAt" Class = "datepicker" Type = "Text" />
+						<Label For = "Editor_Info_CreatedAt">投稿日時</Label>
+					</Div>
 				</Section>
-			</Div>
-		</Header>
 
-		<Main Class = "mdc-typography mdc-typography--body2 mdc-toolbar-fixed-adjust">
-			このツールは、ブログ形式サイトのための記事編集ツールです。
-
-			<Div>
-				<Div Class = "mdc-text-field mdc-text-field--fullwidth" Data-MDC-Auto-Init = "MDCTextField">
-					<Input ID = "Title" Class = "mdc-text-field__input" Type = "Text" />
-					<Label Class = "mdc-text-field__label" For = "Title">記事タイトル</Label>
-					<Div Class = "mdc-text-field__bottom-line"></Div>
+				<Div Class = "input-field">
+					<Textarea ID = "Editor_Content" Class = "materialize-textarea"></Textarea>
+					<Label For = "Editor_Content">記事内容</Label>
 				</Div>
-
-				<Div Class = "mdc-text-field mdc-text-field--textarea mdc-text-field--fullwidth">
-					<Textarea ID = "Content" Class = "mdc-text-field__input" Rows = "10" PlaceHolder = "記事内容"></Textarea>
-				</Div>
-			</Div>
+			</Section>
 		</Main>
 	</Body>
 </HTML>
