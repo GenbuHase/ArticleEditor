@@ -28,22 +28,34 @@
 			</Summary>
 
 			<Section ID = "Editor">
-				<Section ID = "Editor_Info">
+				<Section ID = "Editor-Info">
 					<Div Class = "input-field">
-						<Input ID = "Editor_Info_Title" Class = "validate" Type = "Text" />
-						<Label For = "Editor_Info_Title">記事タイトル</Label>
+						<Input ID = "Editor-Info-Title" Class = "validate" Type = "Text" />
+						<Label For = "Editor-Info-Title">記事タイトル</Label>
 					</Div>
 
 					<Div Class = "input-field">
-						<Input ID = "Editor_Info_CreatedAt" Class = "datepicker" Type = "Text" />
-						<Label For = "Editor_Info_CreatedAt">投稿日時</Label>
+						<Input ID = "Editor-Info-CreatedAt" Class = "datepicker" Type = "Text" />
+						<Label For = "Editor-Info-CreatedAt">投稿日時</Label>
 					</Div>
 				</Section>
 
 				<Div Class = "input-field">
-					<Textarea ID = "Editor_Content" Class = "materialize-textarea"></Textarea>
-					<Label For = "Editor_Content">記事内容</Label>
+					<Textarea ID = "Editor-Content" Class = "materialize-textarea"></Textarea>
+					<Label For = "Editor-Content">記事内容</Label>
 				</Div>
+
+				<Section ID = "Editor-Btns">
+					<A Class = "btn waves-effect waves-light">
+						<I Class = "material-icons left">save</I>
+						下書き保存
+					</A>
+
+					<A Class = "btn waves-effect waves-light">
+						<I Class = "material-icons left">publish</I>
+						ページ作成
+					</A>
+				</Section>
 			</Section>
 		</Main>
 	</Body>

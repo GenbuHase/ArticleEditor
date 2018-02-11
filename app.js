@@ -8,4 +8,4 @@ let app = express();
 		console.log(`[Article Editor] I'm running on port ${setting.PORT}!!`);
 	});
 
-	app.get(/(.*)/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
+	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));

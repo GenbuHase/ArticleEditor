@@ -12,13 +12,13 @@ Main {
 	Padding: 1em;
 }
 
-#Editor_Info {
+#Editor-Info {
 	Display: Flex;
 	Flex-Direction: Row;
 	Align-Items: Baseline;
 	Justify-Content: Space-Between;
 }
 
-#Editor_Info > Div {
+#Editor-Info > Div {
 	Width: 40%;
 }
