@@ -32,7 +32,21 @@
 			<Section ID = "Editor">
 				<Section ID = "Editor-Info">
 					<Div Class = "input-field">
-						<Input ID = "Editor-Info-Title" Class = "validate" Type = "Text" />
+						<Select ID = "Editor-Info-ArticleNumber">
+							<Optgroup Label = "----------">
+								<Option Disabled = "Disabled" Selected = "Selected">----------</Option>
+								<Option ID = "Editor-Info-ArticleNumber--Add">記事追加</Option>
+							</Optgroup>
+
+							<Optgroup Label = "既存の記事">
+							</Optgroup>
+						</Select>
+
+						<Label>対象記事</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<Input ID = "Editor-Info-Title" Class = "validate" Type = "Text" Required = "Required" />
 						<Label For = "Editor-Info-Title">記事タイトル</Label>
 					</Div>
 

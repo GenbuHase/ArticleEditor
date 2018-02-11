@@ -20,5 +20,9 @@ Main {
 }
 
 #Editor-Info > Div {
-	Width: 40%;
+	Width: 10%;
+}
+
+#Editor-Info > Div:nth-Child(2) {
+	Width: 60%;
 }
