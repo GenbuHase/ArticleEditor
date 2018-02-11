@@ -13,6 +13,8 @@
 		<Script Src = "libraries/Materialize/js/materialize.min.js"></Script>
 		<Link Rel = "StyleSheet" Href = "libraries/Materialize/css/materialize.min.css" />
 
+		<Script Src = "libraries/DOM Extender v3.4.js"></Script>
+
 		<Script Src = "main.js" Defer = "Defer"></Script>
 		<Link Rel = "stylesheet" Href = "main.css" />
 	</Head>
@@ -46,12 +48,12 @@
 				</Div>
 
 				<Section ID = "Editor-Btns">
-					<A Class = "btn waves-effect waves-light">
+					<A ID = "Editor-Btns-Save" Class = "btn waves-effect waves-light">
 						<I Class = "material-icons left">save</I>
 						下書き保存
 					</A>
 
-					<A Class = "btn waves-effect waves-light">
+					<A ID = "Editor-Btns-Publish" Class = "btn waves-effect waves-light">
 						<I Class = "material-icons left">publish</I>
 						ページ作成
 					</A>

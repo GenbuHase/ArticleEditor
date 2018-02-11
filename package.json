@@ -2,13 +2,14 @@
 	"name": "article-editor",
 	"version": "1.0.0",
 	"description": "Article Editor",
-	"main": "server.js",
+	"main": "app.js",
 
 	"author": {
 		"name": "Genbu Hase"
 	},
 
 	"dependencies": {
+		"body-parser": "^1.18.2",
 		"express": "^4.16.2"
 	}
 }

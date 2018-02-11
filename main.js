@@ -5,4 +5,15 @@ window.addEventListener("DOMContentLoaded", () => {
 			defaultDate: new Date()
 		});
 	});
+
+	document.querySelector("#Editor-Btns-Save").addEventListener("click", () => {
+		DOM.xhr({
+			type: "POST",
+			url: "/save",
+
+			data: JSON.stringify({
+				createdAt: document.querySelector("#Editor-Info-CreatedAt").value
+			}, null, "\t")
+		});
+	});
 });
