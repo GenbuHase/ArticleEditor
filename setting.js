@@ -1,3 +1,9 @@
 module.exports = {
-	"PORT": 8005
+	"PORT": 8005,
+
+	"VARIABLES": [
+		"title",
+		"createdAt",
+		"content"
+	]
 }
