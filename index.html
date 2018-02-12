@@ -1,0 +1,84 @@
+<!DocType HTML>
+
+<HTML>
+	<Head>
+		<Meta Charset = "UTF-8" />
+		<Meta Name = "Viewport" Content = "Width=Device-Width, Initial-Scale=1" />
+		<Link Rel = "Shortcut Icon" Href = "favicon.ico" />
+		<Title>Article Editor</Title>
+
+		<Link Rel = "StyleSheet" Href = "libraries/Material Icons/material-icons.css" />
+		<Link Rel = "StyleSheet" Href = "libraries/Material Icons Extended/material-icons-extended.css" />
+
+		<Script Src = "libraries/Materialize/js/materialize.min.js"></Script>
+		<Link Rel = "StyleSheet" Href = "libraries/Materialize/css/materialize.min.css" />
+
+		<Script Src = "libraries/DOM Extender v3.4.js"></Script>
+
+		<Script Src = "main.js" Defer = "Defer"></Script>
+		<Link Rel = "stylesheet" Href = "main.css" />
+	</Head>
+	
+	<Body>
+		<Nav>
+			<Span Class = "brand-logo center" Href = "#">Article Editor</Span>
+		</Nav>
+
+		<Main>
+			<Summary>
+				このツールは、ブログ形式サイトのための記事編集ツールです。
+			</Summary>
+
+			<Section ID = "Editor">
+				<Section ID = "Editor-Info">
+					<Div Class = "input-field">
+						<Select ID = "Editor-Info-ArticleID">
+							<Optgroup Label = "----------">
+								<Option Value = "None" Disabled = "Disabled" Selected = "Selected">----------</Option>
+								<Option Value = "Add">記事追加</Option>
+							</Optgroup>
+
+							<Optgroup Label = "既存の記事">
+							</Optgroup>
+						</Select>
+
+						<Label>対象記事</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<Input ID = "Editor-Info-Title" Class = "validate" Type = "Text" Required = "Required" />
+						<Label For = "Editor-Info-Title">記事タイトル</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<I Class = "prefix material-icons">date_range</I>
+						<Input ID = "Editor-Info-CreatedAt" Class = "datepicker" Type = "Text" />
+						<Label For = "Editor-Info-CreatedAt">投稿日時</Label>
+					</Div>
+				</Section>
+
+				<Div Class = "input-field">
+					<Textarea ID = "Editor-Content" Class = "materialize-textarea"></Textarea>
+					<Label For = "Editor-Content">記事内容</Label>
+				</Div>
+
+				<Section ID = "Editor-Btns">
+					<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
+						<I Class = "material-icons left">save</I>
+						下書き保存
+					</A>
+
+					<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
+						<I Class = "material-icons left">publish</I>
+						記事ページ作成
+					</A>
+
+					<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
+						<I Class = "material-icons left">remove</I>
+						記事削除
+					</A>
+				</Section>
+			</Section>
+		</Main>
+	</Body>
+</HTML>
