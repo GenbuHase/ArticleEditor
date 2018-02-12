@@ -66,7 +66,7 @@ let app = express();
 
 	app.post("/api/new", (req, res) => {
 		let articles = fs.readdirSync("articles");
-		let id = parseInt(articles[articles.length - 1].replace(/.json$/, "")) + 1;
+		let id = parseInt(articles.length > 0 ? articles[articles.length - 1].replace(/.json$/, "") : 0) + 1;
 
 		try {
 			fs.writeFileSync(
