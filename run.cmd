@@ -1,1 +1,1 @@
-@Node app.js
+@npm start
