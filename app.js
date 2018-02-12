@@ -15,6 +15,8 @@ let app = express();
 		try {
 			res.end(JSON.stringify({
 				status: "success",
+
+				id: req.query.id,
 				content: fs.readFileSync(`articles/${req.query.id}.json`, "UTF-8")
 			}));
 		} catch (error) {
@@ -111,21 +113,37 @@ let app = express();
 
 		res.end(JSON.stringify({
 			status: "success",
+
+			id,
 			path: `articles/${id}.json`
 		}));
 	});
 
 	app.post("/api/publish", (req, res) => {
-		let mixedContent = "";
+		let publishedPath = `publishes/${req.body.id}.html`;
+		let article, content;
 
 		try {
-			mixedContent = fs.readFileSync("template/index.html", "UTF-8");
-			setting.VARIABLES.forEach(variable => mixedContent.replace(new RegExp(`\${${variable}}`, "g"), req.body[variable]));
+			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}.json`, "UTF-8")),
+			content = fs.readFileSync("template/index.html", "UTF-8");
+
+			setting.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
+
+			fs.writeFileSync(publishedPath, content);
 		} catch (err) {
-			res.end("Error: テンプレートHTML(template/index.html)が存在しません");
+			res.end(JSON.stringify({
+				status: "fail",
+				error
+			}));
 		}
 
-		res.end(mixedContent);
+		res.end(JSON.stringify({
+			status: "success",
+
+			id: req.body.id,
+			path: publishedPath,
+			content
+		}));
 	});
 
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));

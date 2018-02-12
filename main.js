@@ -96,12 +96,33 @@ window.addEventListener("DOMContentLoaded", () => {
 				title: articleTitle.value,
 				createdAt: articleCreatedAt.value,
 				content: articleContent.value
-			})
+			}),
+
+			onLoad (event) {
+				M.toast({ html: `記事(ID：${event.target.response.id})が保存されました` });
+			}
 		});
 	});
 
 	publishBtn.addEventListener("click", () => {
+		DOM.xhr({
+			type: "POST",
+			url: "/api/publish",
+			resType: "json",
+			doesSync: true,
 
+			headers: {
+				"Content-Type": "application/json"
+			},
+
+			data: JSON.stringify({
+				id: articleId.value
+			}),
+
+			onLoad (event) {
+				M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
+			}
+		})
 	});
 
 	deleteBtn.addEventListener("click", () => {
@@ -116,9 +137,9 @@ window.addEventListener("DOMContentLoaded", () => {
 			},
 
 			onLoad (event) {
-				console.log(event.target.response);
-
-				articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${event.target.response.id}"]`).remove(),
+				let id = event.target.response.id;
+				
+				articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${id}"]`).remove(),
 				articleId.M_Select.$selectOptions[0].querySelector('Option[Value="None"]').selected = true;
 
 				articleTitle.value = articleContent.value = "",
@@ -127,6 +148,8 @@ window.addEventListener("DOMContentLoaded", () => {
 				M.Select.init(articleId),
 				M.updateTextFields(),
 				M.textareaAutoResize(articleContent);
+
+				M.toast({ html: `記事(ID：${id})が削除されました` });
 			}
 		});
 	});
