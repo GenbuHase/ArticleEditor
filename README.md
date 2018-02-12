@@ -1,4 +1,7 @@
 # Article Editor
+
+[![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg?branch=AE-1.0.1)](https://travis-ci.org/GenbuHase/ArticleEditor)
+
 ブログ形式サイトのための記事編集ツール
 
 ## 概要 | Description

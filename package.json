@@ -2,10 +2,20 @@
 	"name": "article-editor",
 	"version": "1.0.0",
 	"description": "Article Editor",
-	"main": "app.js",
+	"keywords": [
+		"ArticleEditor",
+		"Article",
+		"Blog"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GenbuHase/ArticleEditor.git"
+	},
 	"author": {
 		"name": "Genbu Hase"
 	},
+	"license": "MIT",
+	"main": "app.js",
 	"scripts": {
 		"start": "node app.js"
 	},
