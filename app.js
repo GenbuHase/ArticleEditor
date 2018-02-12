@@ -153,5 +153,22 @@ let app = express();
 		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
 		if (!fs.existsSync("template")) fs.mkdir("template");
 
+		if (!fs.existsSync("template/index.html")) {
+			fs.writeFile("template/index.html", [
+				'<!DOCTYPE html>',
+				'',
+				'<html>',
+				'	<head>',
+				'		<meta charset="utf-8" />',
+				'		<title>${title} in ${createdAt}</title>',
+				'	</head>',
+				'	',
+				'	<body>',
+				'		${content}',
+				'	</body>',
+				'</html>'
+			].join("\r\n"));
+		}
+
 		console.log(`[Article Editor] I'm running on port ${setting.PORT}!!`);
 	});
