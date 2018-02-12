@@ -34,8 +34,8 @@
 					<Div Class = "input-field">
 						<Select ID = "Editor-Info-ArticleID">
 							<Optgroup Label = "----------">
-								<Option Disabled = "Disabled" Selected = "Selected">----------</Option>
-								<Option ID = "Editor-Info-ArticleID--Add" Value = "Add">記事追加</Option>
+								<Option Value = "None" Disabled = "Disabled" Selected = "Selected">----------</Option>
+								<Option Value = "Add">記事追加</Option>
 							</Optgroup>
 
 							<Optgroup Label = "既存の記事">
@@ -63,14 +63,19 @@
 				</Div>
 
 				<Section ID = "Editor-Btns">
-					<A ID = "Editor-Btns-Save" Class = "btn waves-effect waves-light">
+					<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
 						<I Class = "material-icons left">save</I>
 						下書き保存
 					</A>
 
-					<A ID = "Editor-Btns-Publish" Class = "btn waves-effect waves-light">
+					<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
 						<I Class = "material-icons left">publish</I>
-						ページ作成
+						記事ページ作成
+					</A>
+
+					<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
+						<I Class = "material-icons left">remove</I>
+						記事削除
 					</A>
 				</Section>
 			</Section>

@@ -3,13 +3,12 @@
 	"version": "1.0.0",
 	"description": "Article Editor",
 	"main": "app.js",
-
 	"author": {
 		"name": "Genbu Hase"
 	},
-
 	"dependencies": {
 		"body-parser": "^1.18.2",
-		"express": "^4.16.2"
+		"express": "^4.16.2",
+		"method-override": "^2.3.10"
 	}
 }

@@ -1,18 +1,58 @@
-const express = require("express");
 const fs = require("fs");
+const express = require("express");
 const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+
 const setting = require("./setting");
 
 
 
 let app = express();
 	app.use(bodyParser.json());
+	app.use(methodOverride());
 
-	app.get("/api/articles", (req, res) => {
+	app.get("/api/article", (req, res) => {
 		try {
 			res.end(JSON.stringify({
 				status: "success",
-				amount: fs.readdirSync("articles").length
+				content: fs.readFileSync(`articles/${req.query.id}.json`, "UTF-8")
+			}));
+		} catch (error) {
+			res.end(JSON.stringify({
+				status: "fail",
+				error
+			}));
+		}
+	});
+
+	app.delete("/api/article", (req, res) => {
+		let id = req.query.id;
+
+		try {
+			fs.unlinkSync(`articles/${id}.json`);
+
+			if (fs.existsSync(`publishes/${id}.html`)) fs.unlinkSync(`publishes/${id}.html`);
+		} catch (error) {
+			res.end(JSON.stringify({
+				status: "fail",
+				error
+			}));
+		}
+
+		res.end(JSON.stringify({
+			status: "success",
+			id
+		}));
+	});
+
+	app.get("/api/articles", (req, res) => {
+		try {
+			let articles = fs.readdirSync("articles");
+				articles.forEach((path, index) => articles[index] = path.replace(/.json$/, ""));
+
+			res.end(JSON.stringify({
+				status: "success",
+				articles
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
@@ -23,7 +63,8 @@ let app = express();
 	});
 
 	app.post("/api/new", (req, res) => {
-		let id = fs.readdirSync("articles").length + 1;
+		let articles = fs.readdirSync("articles");
+		let id = parseInt(articles[articles.length - 1].replace(/.json$/, "")) + 1;
 
 		try {
 			fs.writeFileSync(
@@ -31,7 +72,7 @@ let app = express();
 
 				JSON.stringify({
 					title: "",
-					createdAt: "",
+					createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
 					content: ""
 				}, null, "\t")
 			);
@@ -90,5 +131,9 @@ let app = express();
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
 
 	app.listen(setting.PORT, () => {
+		if (!fs.existsSync("articles")) fs.mkdir("articles");
+		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
+		if (!fs.existsSync("template")) fs.mkdir("template");
+
 		console.log(`[Article Editor] I'm running on port ${setting.PORT}!!`);
 	});
