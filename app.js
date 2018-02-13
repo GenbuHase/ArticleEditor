@@ -17,7 +17,7 @@ let app = express();
 				status: "success",
 
 				id: req.query.id,
-				content: fs.readFileSync(`articles/${req.query.id}.json`, "UTF-8")
+				content: fs.readFileSync(`articles/${req.query.id}/index.json`, "UTF-8")
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
@@ -31,9 +31,13 @@ let app = express();
 		let id = req.query.id;
 
 		try {
-			fs.unlinkSync(`articles/${id}.json`);
+			fs.readdirSync(`articles/${id}`).forEach(file => fs.unlinkSync(`articles/${id}/${file}`));
+			fs.rmdirSync(`articles/${id}`);
 
-			if (fs.existsSync(`publishes/${id}.html`)) fs.unlinkSync(`publishes/${id}.html`);
+			if (fs.existsSync(`publishes/${id}`)) {
+				fs.readdirSync(`publishes/${id}`).forEach(file => fs.unlinkSync(`publishes/${id}/${file}`));
+				fs.rmdirSync(`publishes/${id}`);
+			}
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -50,7 +54,6 @@ let app = express();
 	app.get("/api/articles", (req, res) => {
 		try {
 			let articles = fs.readdirSync("articles");
-				articles.forEach((path, index) => articles[index] = path.replace(/.json$/, ""));
 
 			res.end(JSON.stringify({
 				status: "success",
@@ -66,11 +69,12 @@ let app = express();
 
 	app.post("/api/new", (req, res) => {
 		let articles = fs.readdirSync("articles");
-		let id = parseInt(articles.length > 0 ? articles[articles.length - 1].replace(/.json$/, "") : 0) + 1;
+		let id = parseInt(articles.length > 0 ? articles[articles.length - 1] : 0) + 1;
 
 		try {
+			fs.mkdirSync(`articles/${id}`);
 			fs.writeFileSync(
-				`articles/${id}.json`,
+				`articles/${id}/index.json`,
 
 				JSON.stringify({
 					title: "",
@@ -96,7 +100,7 @@ let app = express();
 
 		try {
 			fs.writeFileSync(
-				`articles/${id}.json`,
+				`articles/${id}/index.json`,
 
 				JSON.stringify({
 					title,
@@ -115,21 +119,22 @@ let app = express();
 			status: "success",
 
 			id,
-			path: `articles/${id}.json`
+			path: `articles/${id}/index.json`
 		}));
 	});
 
 	app.post("/api/publish", (req, res) => {
-		let publishedPath = `publishes/${req.body.id}.html`;
+		let publishedPath = `publishes/${req.body.id}`;
 		let article, content;
 
 		try {
-			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}.json`, "UTF-8")),
+			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}/index.json`, "UTF-8")),
 			content = fs.readFileSync("template/index.html", "UTF-8");
 
 			setting.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
-			fs.writeFileSync(publishedPath, content);
+			fs.mkdirSync(publishedPath);
+			fs.writeFileSync(`${publishedPath}/index.html`, content);
 		} catch (err) {
 			res.end(JSON.stringify({
 				status: "fail",
