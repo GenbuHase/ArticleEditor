@@ -37,7 +37,7 @@
 ```
 $ git clone https://github.com/GenbuHase/ArticleEditor.git
 $ cd ArticleEditor
-$ npm start
+$ npm install
 ```
 
 ## 作者 | Author
