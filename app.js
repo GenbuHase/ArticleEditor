@@ -45,6 +45,8 @@ let app = express();
 			}));
 		}
 
+		setting.onDelete(id);
+
 		res.end(JSON.stringify({
 			status: "success",
 			id
@@ -97,11 +99,12 @@ let app = express();
 
 	app.post("/api/draft", (req, res) => {
 		let { id, title, createdAt, content } = req.body;
+		let path = `articles/${id}/index.json`;
 
 		try {
 			fs.writeFileSync(
-				`articles/${id}/index.json`,
-
+				path,
+				
 				JSON.stringify({
 					title,
 					createdAt,
@@ -115,6 +118,8 @@ let app = express();
 			}));
 		}
 
+		setting.onSave(id, path, { title, createdAt, content });
+
 		res.end(JSON.stringify({
 			status: "success",
 
@@ -124,17 +129,17 @@ let app = express();
 	});
 
 	app.post("/api/publish", (req, res) => {
-		let publishedPath = `publishes/${req.body.id}`;
+		let path = `publishes/${req.body.id}`;
 		let article, content;
 
 		try {
 			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}/index.json`, "UTF-8")),
 			content = fs.readFileSync("template/index.html", "UTF-8");
 
-			setting.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
+			setting.variables.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
-			fs.mkdirSync(publishedPath);
-			fs.writeFileSync(`${publishedPath}/index.html`, content);
+			fs.mkdirSync(path);
+			fs.writeFileSync(`${path}/index.html`, content);
 		} catch (err) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -142,18 +147,20 @@ let app = express();
 			}));
 		}
 
+		setting.onPublish(req.body.id, path, content);
+
 		res.end(JSON.stringify({
 			status: "success",
 
 			id: req.body.id,
-			path: publishedPath,
+			path,
 			content
 		}));
 	});
 
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
 
-	app.listen(setting.PORT, () => {
+	app.listen(setting.port, () => {
 		if (!fs.existsSync("articles")) fs.mkdir("articles");
 		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
 		if (!fs.existsSync("template")) fs.mkdir("template");
@@ -175,5 +182,5 @@ let app = express();
 			].join("\r\n"));
 		}
 
-		console.log(`[Article Editor] I'm running on port ${setting.PORT}!!`);
+		console.log(`[Article Editor] I'm running on port ${setting.port}!!`);
 	});

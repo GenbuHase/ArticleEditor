@@ -1,9 +1,13 @@
 module.exports = {
-	"PORT": 8005,
+	port: 8005,
 
-	"VARIABLES": [
+	variables: [
 		"title",
 		"createdAt",
 		"content"
-	]
+	],
+
+	onSave (id = 0, path = "", article = {}) {},
+	onPublish (id = 0, path = "", content = "") {},
+	onDelete (id = 0) {}
 }
