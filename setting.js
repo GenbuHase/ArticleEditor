@@ -1,5 +1,6 @@
 module.exports = {
 	port: 8005,
+	publishPath: "",
 
 	variables: [
 		"title",
