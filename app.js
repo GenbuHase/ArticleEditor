@@ -83,7 +83,7 @@ let app = express();
 			}));
 		}
 
-		setting.onCreate(self, id, { title, createdAt, content });
+		setting.onCreate(self, id);
 
 		res.end(JSON.stringify({
 			status: "success",
