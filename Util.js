@@ -1,15 +1,23 @@
 const fs = require("fs");
 
 module.exports = {
-	writeFileWithDirSync (path = "", content) {
+	mkdirsSync (path = "") {
 		let folders = path.split("/").slice(0, -1);
 			folders.forEach((dirName, index) => {
 				let dirPath = folders.slice(0, index + 1).join("/");
 
 				if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath);
 			});
+	},
 
+	writeFileWithDirSync (path = "", content) {
+		this.mkdirsSync(path.split("/").slice(0, -1).join("/"));
 		fs.writeFileSync(path, content);
+	},
+
+	copydirWithSync (path = "", dest = "") {
+		this.mkdirsSync(dest);
+		fs.readdirSync(path).forEach(file => fs.copyFileSync(`${path}/${file}`, `${dest}/${file}`));
 	},
 
 	removedirSync (path) {

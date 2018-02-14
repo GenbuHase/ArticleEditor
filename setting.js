@@ -7,7 +7,7 @@ module.exports = {
 		"content"
 	],
 
-	onSave (id = 0, path = "", article = {}) {},
-	onPublish (id = 0, path = "", content = "") {},
-	onDelete (id = 0) {}
+	onSave (self, id = 0, path = "", article = {}) {},
+	onPublish (self, id = 0, path = "", content = "") {},
+	onDelete (self, id = 0) {}
 }

@@ -2,9 +2,10 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-
 const Util = require("./Util");
 const setting = require("./setting");
+
+const self = { fs, express, bodyParser, methodOverride, Util, setting };
 
 
 
@@ -41,7 +42,7 @@ let app = express();
 			}));
 		}
 
-		setting.onDelete(id);
+		setting.onDelete(self, id);
 
 		res.end(JSON.stringify({
 			status: "success",
@@ -90,10 +91,10 @@ let app = express();
 
 	app.post("/api/draft", (req, res) => {
 		let { id, title, createdAt, content } = req.body;
-		let path = `articles/${id}/index.json`;
+		let path = `articles/${id}`;
 
 		try {
-			fs.writeFileSync(path, JSON.stringify({
+			fs.writeFileSync(`${path}/index.json`, JSON.stringify({
 				title,
 				createdAt,
 				content
@@ -105,13 +106,13 @@ let app = express();
 			}));
 		}
 
-		setting.onSave(id, path, { title, createdAt, content });
+		setting.onSave(self, id, path, { title, createdAt, content });
 
 		res.end(JSON.stringify({
 			status: "success",
 
 			id,
-			path: `articles/${id}/index.json`
+			path
 		}));
 	});
 
@@ -135,7 +136,7 @@ let app = express();
 			}));
 		}
 
-		setting.onPublish(req.body.id, path, content);
+		setting.onPublish(self, req.body.id, path, content);
 
 		res.end(JSON.stringify({
 			status: "success",
