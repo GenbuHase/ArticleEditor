@@ -141,9 +141,9 @@ window.addEventListener("DOMContentLoaded", () => {
 				
 				articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${id}"]`).remove(),
 				articleId.M_Select.$selectOptions[0].querySelector('Option[Value="None"]').selected = true;
-        
+				
 				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
-        
+				
 				articleTitle.value = articleContent.value = "",
 				articleCreatedAt.value = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
 

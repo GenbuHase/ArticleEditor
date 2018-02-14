@@ -26,7 +26,7 @@
 	* `${title}` ... 記事タイトル
 	* `${createdAt}` ... 記事作成日
 	* `${content}` ... 記事内容
-  
+	
 2.	Article Editorを起動するために`run.cmd`か`npm start`を実行します。
 3.	起動後、[http://localhost:8005](http://localhost:8005)にアクセスします。
 4.	ページの指示に従って執筆しましょう！
