@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
+const Util = require("./Util");
 const setting = require("./setting");
 
 
@@ -31,13 +32,8 @@ let app = express();
 		let id = req.query.id;
 
 		try {
-			fs.readdirSync(`articles/${id}`).forEach(file => fs.unlinkSync(`articles/${id}/${file}`));
-			fs.rmdirSync(`articles/${id}`);
-
-			if (fs.existsSync(`publishes/${id}`)) {
-				fs.readdirSync(`publishes/${id}`).forEach(file => fs.unlinkSync(`publishes/${id}/${file}`));
-				fs.rmdirSync(`publishes/${id}`);
-			}
+			Util.removedirSync(`articles/${id}`);
+			if (fs.existsSync(`publishes/${id}`)) Util.removedirSync(`publishes/${id}`);
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -74,16 +70,11 @@ let app = express();
 		let id = parseInt(articles.length > 0 ? articles[articles.length - 1] : 0) + 1;
 
 		try {
-			fs.mkdirSync(`articles/${id}`);
-			fs.writeFileSync(
-				`articles/${id}/index.json`,
-
-				JSON.stringify({
-					title: "",
-					createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
-					content: ""
-				}, null, "\t")
-			);
+			Util.writeFileWithDirSync(`articles/${id}/index.json`, JSON.stringify({
+				title: "",
+				createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
+				content: ""
+			}, null, "\t"));
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -102,15 +93,11 @@ let app = express();
 		let path = `articles/${id}/index.json`;
 
 		try {
-			fs.writeFileSync(
-				path,
-				
-				JSON.stringify({
-					title,
-					createdAt,
-					content
-				}, null, "\t")
-			);
+			fs.writeFileSync(path, JSON.stringify({
+				title,
+				createdAt,
+				content
+			}, null, "\t"));
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -138,9 +125,10 @@ let app = express();
 
 			setting.variables.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
-			fs.mkdirSync(path);
-			fs.writeFileSync(`${path}/index.html`, content);
-		} catch (err) {
+			if (fs.existsSync(path)) Util.removedirSync(path);
+			
+			Util.writeFileWithDirSync(`${path}/index.html`, content);
+		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
 				error
