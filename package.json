@@ -17,7 +17,8 @@
 	"license": "MIT",
 	"main": "app.js",
 	"scripts": {
-		"start": "node app.js"
+		"start": "node app.js",
+		"debug": "node inspect app.js"
 	},
 	"dependencies": {
 		"body-parser": "^1.18.2",
