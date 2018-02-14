@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports = {
 	mkdirsSync (path = "") {
-		let folders = path.split("/").slice(0, -1);
+		let folders = path.split("/");
 			folders.forEach((dirName, index) => {
 				let dirPath = folders.slice(0, index + 1).join("/");
 
@@ -15,7 +15,7 @@ module.exports = {
 		fs.writeFileSync(path, content);
 	},
 
-	copydirWithSync (path = "", dest = "") {
+	copydirSync (path = "", dest = "") {
 		this.mkdirsSync(dest);
 		fs.readdirSync(path).forEach(file => fs.copyFileSync(`${path}/${file}`, `${dest}/${file}`));
 	},
