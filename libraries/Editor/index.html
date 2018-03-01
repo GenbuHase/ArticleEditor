@@ -13,7 +13,7 @@
 		<Script Src = "libraries/Materialize/js/materialize.min.js"></Script>
 		<Link Rel = "StyleSheet" Href = "libraries/Materialize/css/materialize.min.css" />
 
-		<Script Src = "libraries/DOM Extender v3.4.js"></Script>
+		<Script Src = "libraries/DOM Extender v3.5.js"></Script>
 
 		<Script Src = "main.js" Defer = "Defer"></Script>
 		<Link Rel = "stylesheet" Href = "main.css" />
@@ -28,6 +28,16 @@
 			<Summary>
 				このツールは、ブログ形式サイトのための記事編集ツールです。
 			</Summary>
+
+			<UL Class = "tabs">
+				<Li Class = "tab">
+					<A Class = "active" Href = "#Editor">編集画面</A>
+				</Li>
+
+				<Li Class = "tab">
+					<A Href = "#Toolbar">その他のツール</A>
+				</Li>
+			</UL>
 
 			<Section ID = "Editor">
 				<Section ID = "Editor-Info">
@@ -57,10 +67,16 @@
 					</Div>
 				</Section>
 
-				<Div Class = "input-field">
-					<Textarea ID = "Editor-Content" Class = "materialize-textarea"></Textarea>
-					<Label For = "Editor-Content">記事内容</Label>
-				</Div>
+				<Section ID = "Editor-Content">
+					<Div Class = "input-field">
+						<Textarea ID = "Editor-Content-Text" Class = "materialize-textarea"></Textarea>
+						<Label For = "Editor-Content-Text">記事内容</Label>
+					</Div>
+
+					<Div ID = "Editor-Content-Album">
+						
+					</Div>
+				</Section>
 
 				<Section ID = "Editor-Btns">
 					<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
@@ -70,7 +86,7 @@
 
 					<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
 						<I Class = "material-icons left">publish</I>
-						記事ページ作成
+						記事ページ生成
 					</A>
 
 					<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
@@ -78,6 +94,13 @@
 						記事削除
 					</A>
 				</Section>
+			</Section>
+
+			<Section ID = "Toolbar">
+				<A ID = "Toolbar-PublishAll" Class = "btn waves-effect waves-light">
+					<I Class = "material-icons left">publish</I>
+					全記事ページ生成
+				</A>
 			</Section>
 		</Main>
 	</Body>

@@ -2,13 +2,15 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleId = document.querySelector("#Editor-Info-ArticleID");
 	const articleTitle = document.querySelector("#Editor-Info-Title");
 	const articleCreatedAt = document.querySelector("#Editor-Info-CreatedAt");
-	const articleContent = document.querySelector("#Editor-Content");
+	const articleContent = document.querySelector("#Editor-Content-Text");
 	const btns = document.querySelector("#Editor-Btns");
 	const saveBtn = document.querySelector("#Editor-Btns-Save");
 	const publishBtn = document.querySelector("#Editor-Btns-Publish");
 	const deleteBtn = document.querySelector("#Editor-Btns-Delete");
+	const publishAllBtn = document.querySelector("#Toolbar-PublishAll");
 
 	document.querySelectorAll("Select").forEach(selectBox => M.Select.init(selectBox));
+	document.querySelectorAll(".tabs").forEach(tab => M.Tabs.init(tab));
 
 	document.querySelectorAll(".datepicker").forEach(picker => {
 		picker.value = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
@@ -122,7 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			onLoad (event) {
 				M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
 			}
-		})
+		});
 	});
 
 	deleteBtn.addEventListener("click", () => {
@@ -152,6 +154,38 @@ window.addEventListener("DOMContentLoaded", () => {
 				M.textareaAutoResize(articleContent);
 
 				M.toast({ html: `記事(ID：${id})が削除されました` });
+			}
+		});
+	});
+
+	publishAllBtn.addEventListener("click", () => {
+		DOM.xhr({
+			type: "GET",
+			url: "/api/articles",
+			resType: "json",
+			doesSync: true,
+
+			onLoad (event) {
+				for (let articleName in event.target.response.articles) {
+					DOM.xhr({
+						type: "POST",
+						url: "/api/publish",
+						resType: "json",
+						doesSync: true,
+			
+						headers: {
+							"Content-Type": "application/json"
+						},
+			
+						data: JSON.stringify({
+							id: event.target.response.articles[articleName]
+						}),
+			
+						onLoad (event) {
+							M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
+						}
+					});
+				}
 			}
 		});
 	});

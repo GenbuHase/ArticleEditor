@@ -2,7 +2,7 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const Util = require("./Util");
+const Util = require("./libraries/Util");
 const setting = require("./setting");
 
 const self = { fs, express, bodyParser, methodOverride, Util, setting };
@@ -12,6 +12,12 @@ const self = { fs, express, bodyParser, methodOverride, Util, setting };
 let app = express();
 	app.use(bodyParser.json());
 	app.use(methodOverride());
+
+	app.use(express.static("libraries/Editor"));
+
+	app.get("/", (req, res) => {
+		res.sendFile("libraries/Editor/index.html");
+	});
 
 	app.get("/api/article", (req, res) => {
 		try {

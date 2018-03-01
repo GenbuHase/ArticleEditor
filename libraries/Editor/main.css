@@ -8,14 +8,13 @@ Main {
 
 
 
-#Editor {
+#Editor, #Toolbar {
 	Padding: 1em;
 }
 
-#Editor-Info {
+#Editor-Info, #Editor-Content {
 	Display: Flex;
 	Flex-Direction: Row;
-	Align-Items: Baseline;
 	Justify-Content: Space-Between;
 }
 
@@ -25,4 +24,13 @@ Main {
 
 #Editor-Info > Div:nth-Child(2) {
 	Width: 60%;
+}
+
+#Editor-Content > Div:First-Child {
+	Flex: 1;
+}
+
+#Editor-Content-Album {
+	Width: 20%;
+	Padding: 1em;
 }
