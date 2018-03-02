@@ -16,6 +16,7 @@ Main {
 	Display: Flex;
 	Flex-Direction: Row;
 	Justify-Content: Space-Between;
+	Align-Items: Flex-Start;
 }
 
 #Editor-Info > Div {
@@ -32,5 +33,9 @@ Main {
 
 #Editor-Content-Album {
 	Width: 20%;
-	Padding: 1em;
+	Margin-Left: 1em;
+}
+
+#Editor-Content-Album > Section:Not(.tabs) {
+	Height: 100%;
 }

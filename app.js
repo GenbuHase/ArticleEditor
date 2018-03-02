@@ -16,6 +16,9 @@ let app = express();
 	app.use("", express.static(`${__dirname}/system/views/Editor`));
 	app.use("/libraries", express.static(`${__dirname}/system/views/libraries`));
 
+	/**
+	 * Returns the article's infomation
+	 */
 	app.get("/api/article", (req, res) => {
 		try {
 			res.end(JSON.stringify({
@@ -32,6 +35,9 @@ let app = express();
 		}
 	});
 
+	/**
+	 * Deletes the article
+	 */
 	app.delete("/api/article/:id", (req, res) => {
 		let id = req.params.id;
 
@@ -53,6 +59,9 @@ let app = express();
 		}));
 	});
 
+	/**
+	 * Returns a list of articles
+	 */
 	app.get("/api/articles", (req, res) => {
 		try {
 			let articles = fs.readdirSync("articles");
@@ -69,6 +78,9 @@ let app = express();
 		}
 	});
 
+	/**
+	 * Creates new files with a unused id
+	 */
 	app.post("/api/new", (req, res) => {
 		let articles = fs.readdirSync("articles");
 		let id = parseInt(articles.length > 0 ? articles[articles.length - 1] : 0) + 1;
@@ -94,6 +106,9 @@ let app = express();
 		}));
 	});
 
+	/**
+	 * Saves the article's draft
+	 */
 	app.post("/api/draft", (req, res) => {
 		let { id, title, createdAt, content } = req.body;
 		let path = `articles/${id}`;
@@ -121,6 +136,9 @@ let app = express();
 		}));
 	});
 
+	/**
+	 * Generates the article's page
+	 */
 	app.post("/api/publish", (req, res) => {
 		let path = `publishes/${req.body.id}`;
 		let article, content;
@@ -150,6 +168,20 @@ let app = express();
 			path,
 			content
 		}));
+	});
+
+	/**
+	 * Copys the photo to the current directory
+	 */
+	app.post("/api/media", (req, res) => {
+
+	});
+
+	/**
+	 * Deletes the photo from the current directory
+	 */
+	app.delete("/api/media/:mediaId", (req, res) => {
+
 	});
 
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
