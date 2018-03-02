@@ -130,13 +130,9 @@ window.addEventListener("DOMContentLoaded", () => {
 	deleteBtn.addEventListener("click", () => {
 		DOM.xhr({
 			type: "DELETE",
-			url: "/api/article",
+			url: `/api/article/${articleId.value}`,
 			resType: "json",
 			doesSync: true,
-
-			params: {
-				id: articleId.value
-			},
 
 			onLoad (event) {
 				let id = event.target.response.id;

@@ -2,10 +2,10 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const Util = require("./libraries/Util");
-const setting = require("./setting");
+const Util = require("./system/libraries/Util");
+const CONFIG = require("./system/config");
 
-const self = { fs, express, bodyParser, methodOverride, Util, setting };
+const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
 
 
 
@@ -13,11 +13,8 @@ let app = express();
 	app.use(bodyParser.json());
 	app.use(methodOverride());
 
-	app.use(express.static("libraries/Editor"));
-
-	app.get("/", (req, res) => {
-		res.sendFile("libraries/Editor/index.html");
-	});
+	app.use("", express.static(`${__dirname}/system/views/Editor`));
+	app.use("/libraries", express.static(`${__dirname}/system/views/libraries`));
 
 	app.get("/api/article", (req, res) => {
 		try {
@@ -35,8 +32,8 @@ let app = express();
 		}
 	});
 
-	app.delete("/api/article", (req, res) => {
-		let id = req.query.id;
+	app.delete("/api/article/:id", (req, res) => {
+		let id = req.params.id;
 
 		try {
 			Util.removedirSync(`articles/${id}`);
@@ -48,7 +45,7 @@ let app = express();
 			}));
 		}
 
-		setting.onDelete(self, id);
+		CONFIG.onDelete(self, id);
 
 		res.end(JSON.stringify({
 			status: "success",
@@ -89,7 +86,7 @@ let app = express();
 			}));
 		}
 
-		setting.onCreate(self, id);
+		CONFIG.onCreate(self, id);
 
 		res.end(JSON.stringify({
 			status: "success",
@@ -114,7 +111,7 @@ let app = express();
 			}));
 		}
 
-		setting.onSave(self, id, path, { title, createdAt, content });
+		CONFIG.onSave(self, id, path, { title, createdAt, content });
 
 		res.end(JSON.stringify({
 			status: "success",
@@ -132,7 +129,7 @@ let app = express();
 			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}/index.json`, "UTF-8")),
 			content = fs.readFileSync("template/index.html", "UTF-8");
 
-			setting.variables.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
+			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
 			if (fs.existsSync(path)) Util.removedirSync(path);
 			
@@ -144,7 +141,7 @@ let app = express();
 			}));
 		}
 
-		setting.onPublish(self, req.body.id, path, content);
+		CONFIG.onPublish(self, req.body.id, path, content);
 
 		res.end(JSON.stringify({
 			status: "success",
@@ -157,7 +154,7 @@ let app = express();
 
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
 
-	app.listen(setting.port, () => {
+	app.listen(CONFIG.PORT, () => {
 		if (!fs.existsSync("articles")) fs.mkdir("articles");
 		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
 		if (!fs.existsSync("template")) fs.mkdir("template");
@@ -179,5 +176,5 @@ let app = express();
 			].join("\r\n"));
 		}
 
-		console.log(`[Article Editor] I'm running on port ${setting.port}!!`);
+		console.log(`[Article Editor] I'm running on port ${CONFIG.PORT}!!`);
 	});
