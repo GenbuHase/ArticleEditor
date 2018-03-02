@@ -2,6 +2,7 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+const multer = require("multer");
 const Util = require("./system/libraries/Util");
 const CONFIG = require("./system/config");
 
@@ -174,7 +175,10 @@ let app = express();
 	 * Copys the photo to the current directory
 	 */
 	app.post("/api/media", (req, res) => {
+		app.use(multer({ dest: `articles/${req.body.articleId}/images/` }).any());
 
+		console.log(req);
+		res.end();
 	});
 
 	/**

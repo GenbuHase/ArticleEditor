@@ -84,8 +84,22 @@
 							</Li>
 						</UL>
 
-						<Section ID = "Editor-Content-Album-InArticle">
+						<Form Method = "POST" Action = "/api/media" EncType = "multipart/form-data">
+							<Div Class = "input-field file-field">
+								<Div Class = "btn">
+									<Span>選択</Span>
+									<Input ID = "Editor-Content-Album-ImagePicker" Type = "File" Multiple = "Multiple" />
+									<Input Type = "Hidden" Name = "articleId" Value = "1" />
+								</Div>
+	
+								<Div Class = "file-path-wrapper">
+									<Input Class = "file-path validate" Type = "Text" PlaceHolder = "画像を選択してください" />
+								</Div>
+							</Div>
+						</Form>
 
+						<Section ID = "Editor-Content-Album-InArticle">
+							
 						</Section>
 
 						<Section ID = "Editor-Content-Album-InBlog">

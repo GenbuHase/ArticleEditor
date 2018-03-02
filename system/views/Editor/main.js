@@ -3,6 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.querySelector("#Editor-Info-Title");
 	const articleCreatedAt = document.querySelector("#Editor-Info-CreatedAt");
 	const articleContent = document.querySelector("#Editor-Content-Text");
+	const imagePicker = document.querySelector("#Editor-Content-Album-ImagePicker");
 	const btns = document.querySelector("#Editor-Btns");
 	const saveBtn = document.querySelector("#Editor-Btns-Save");
 	const publishBtn = document.querySelector("#Editor-Btns-Publish");
@@ -79,6 +80,32 @@ window.addEventListener("DOMContentLoaded", () => {
 				M.textareaAutoResize(articleContent);
 			}
 		});
+	});
+
+	imagePicker.addEventListener("change", event => {
+		let files = event.target.files;
+			console.log(files);
+
+		for (let i = 0; i < files.length; i++) {
+			DOM.xhr({
+				type: "POST",
+				url: "/api/media",
+				resType: "json",
+				doesSync: true,
+
+				headers: {
+					"Content-Type": "application/json"
+				},
+
+				data: JSON.stringify({
+					articleId: articleId.value
+				}),
+
+				onLoad (event) {
+					console.log(event);
+				}
+			});
+		}
 	});
 
 	saveBtn.addEventListener("click", () => {
