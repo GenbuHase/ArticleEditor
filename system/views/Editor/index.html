@@ -84,12 +84,11 @@
 							</Li>
 						</UL>
 
-						<Form Method = "POST" Action = "/api/media" EncType = "multipart/form-data">
+						<Form Method = "POST" Action = "/api/media" EncType = "multipart/form-data" Target = "uploader">
 							<Div Class = "input-field file-field">
 								<Div Class = "btn">
 									<Span>選択</Span>
-									<Input ID = "Editor-Content-Album-ImagePicker" Type = "File" Multiple = "Multiple" />
-									<Input Type = "Hidden" Name = "articleId" Value = "1" />
+									<Input Name = "photos" ID = "Editor-Content-Album-ImagePicker" Type = "File" Multiple = "Multiple" />
 								</Div>
 	
 								<Div Class = "file-path-wrapper">

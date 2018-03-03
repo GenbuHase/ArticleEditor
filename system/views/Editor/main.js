@@ -83,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 
 	imagePicker.addEventListener("change", event => {
-		let files = event.target.files;
+		/*let files = event.target.files;
 			console.log(files);
 
 		for (let i = 0; i < files.length; i++) {
@@ -105,7 +105,7 @@ window.addEventListener("DOMContentLoaded", () => {
 					console.log(event);
 				}
 			});
-		}
+		}*/
 	});
 
 	saveBtn.addEventListener("click", () => {

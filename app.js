@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const multer = require("multer");
 const Util = require("./system/libraries/Util");
+const API = require("./system/libraries/API");
 const CONFIG = require("./system/config");
 
 const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
+const CommonUpload = multer({ dest: "./articles/images/" });
 
 
 
@@ -26,7 +28,7 @@ let app = express();
 				status: "success",
 
 				id: req.query.id,
-				content: fs.readFileSync(`articles/${req.query.id}/index.json`, "UTF-8")
+				content: API.getArticle(req.query.id)
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
@@ -43,8 +45,7 @@ let app = express();
 		let id = req.params.id;
 
 		try {
-			Util.removedirSync(`articles/${id}`);
-			if (fs.existsSync(`publishes/${id}`)) Util.removedirSync(`publishes/${id}`);
+			API.deleteArticle(id);
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -65,7 +66,7 @@ let app = express();
 	 */
 	app.get("/api/articles", (req, res) => {
 		try {
-			let articles = fs.readdirSync("articles");
+			let articles = API.getArticles();
 
 			res.end(JSON.stringify({
 				status: "success",
@@ -83,8 +84,7 @@ let app = express();
 	 * Creates new files with a unused id
 	 */
 	app.post("/api/new", (req, res) => {
-		let articles = fs.readdirSync("articles");
-		let id = parseInt(articles.length > 0 ? articles[articles.length - 1] : 0) + 1;
+		let id = API.getNextArticleId();
 
 		try {
 			Util.writeFileWithDirSync(`articles/${id}/index.json`, JSON.stringify({
@@ -145,7 +145,7 @@ let app = express();
 		let article, content;
 
 		try {
-			article = JSON.parse(fs.readFileSync(`articles/${req.body.id}/index.json`, "UTF-8")),
+			article = JSON.parse(API.getArticle(req.body.id)),
 			content = fs.readFileSync("template/index.html", "UTF-8");
 
 			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
@@ -172,17 +172,21 @@ let app = express();
 	});
 
 	/**
-	 * Copys the photo to the current directory
+	 * Copys the photo to the common directory
 	 */
-	app.post("/api/media", (req, res) => {
-		app.use(multer({ dest: `articles/${req.body.articleId}/images/` }).any());
+	app.post("/api/media", CommonUpload.array("photos"), (req, res, err) => {
+		let commonMedias = API.getCommonMedias(),
+			uploadedMedias = req.files;
 
-		console.log(req);
+		for (let i = 0; i < uploadedMedias.length; i++) {
+			API.renameMedia(uploadedMedias[i]);
+		}
+
 		res.end();
 	});
 
 	/**
-	 * Deletes the photo from the current directory
+	 * Deletes the photo from the common directory
 	 */
 	app.delete("/api/media/:mediaId", (req, res) => {
 
