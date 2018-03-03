@@ -16,6 +16,14 @@ module.exports = class API {
 		return parseInt(articles.length > 0 ? articles[articles.length - 1] : 0) + 1;
 	}
 
+	static createArticle (id = 0) {
+		Util.writeFileWithDirSync(`articles/${id}/index.json`, JSON.stringify({
+			title: "",
+			createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
+			content: ""
+		}, null, "\t"));
+	}
+
 	static deleteArticle (id = 0) {
 		Util.removedirSync(`articles/${id}`);
 		if (fs.existsSync(`publishes/${id}`)) Util.removedirSync(`publishes/${id}`);

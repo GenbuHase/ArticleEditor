@@ -87,11 +87,7 @@ let app = express();
 		let id = API.getNextArticleId();
 
 		try {
-			Util.writeFileWithDirSync(`articles/${id}/index.json`, JSON.stringify({
-				title: "",
-				createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
-				content: ""
-			}, null, "\t"));
+			API.createArticle(id);
 		} catch (error) {
 			res.end(JSON.stringify({
 				status: "fail",
@@ -182,7 +178,9 @@ let app = express();
 			API.renameMedia(uploadedMedias[i]);
 		}
 
-		res.end();
+		res.end(JSON.stringify({
+			status: "success"
+		}));
 	});
 
 	/**
