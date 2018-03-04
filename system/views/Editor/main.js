@@ -1,14 +1,15 @@
 window.addEventListener("DOMContentLoaded", () => {
-	const articleId = document.querySelector("#Editor-Info-ArticleID");
-	const articleTitle = document.querySelector("#Editor-Info-Title");
-	const articleCreatedAt = document.querySelector("#Editor-Info-CreatedAt");
-	const articleContent = document.querySelector("#Editor-Content-Text");
-	const imagePicker = document.querySelector("#Editor-Content-Album-ImagePicker");
-	const btns = document.querySelector("#Editor-Btns");
-	const saveBtn = document.querySelector("#Editor-Btns-Save");
-	const publishBtn = document.querySelector("#Editor-Btns-Publish");
-	const deleteBtn = document.querySelector("#Editor-Btns-Delete");
-	const publishAllBtn = document.querySelector("#Toolbar-PublishAll");
+	const articleId = document.getElementById("Editor-Info-ArticleID");
+	const articleTitle = document.getElementById("Editor-Info-Title");
+	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
+	const articleContent = document.getElementById("Editor-Content-Text");
+	const articleAlbum = document.getElementById("Editor-Content-Medias-InArticle");
+	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog");
+	const btns = document.getElementById("Editor-Btns");
+	const saveBtn = document.getElementById("Editor-Btns-Save");
+	const publishBtn = document.getElementById("Editor-Btns-Publish");
+	const deleteBtn = document.getElementById("Editor-Btns-Delete");
+	const publishAllBtn = document.getElementById("Toolbar-PublishAll");
 
 	document.querySelectorAll("Select").forEach(selectBox => M.Select.init(selectBox));
 	document.querySelectorAll(".tabs").forEach(tab => M.Tabs.init(tab));
@@ -61,13 +62,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		DOM.xhr({
 			type: "GET",
-			url: `api/article`,
+			url: `/api/article/${articleId.value}`,
 			resType: "json",
 			doesSync: true,
-
-			params: {
-				id: articleId.value
-			},
 
 			onLoad (event) {
 				let { title, createdAt, content } = JSON.parse(event.target.response.content);
@@ -80,32 +77,17 @@ window.addEventListener("DOMContentLoaded", () => {
 				M.textareaAutoResize(articleContent);
 			}
 		});
-	});
 
-	imagePicker.addEventListener("change", event => {
-		/*let files = event.target.files;
-			console.log(files);
+		DOM.xhr({
+			type: "GET",
+			url: `/api/medias/${articleId.value}`,
+			resType: "json",
+			doesSync: true,
 
-		for (let i = 0; i < files.length; i++) {
-			DOM.xhr({
-				type: "POST",
-				url: "/api/media",
-				resType: "json",
-				doesSync: true,
-
-				headers: {
-					"Content-Type": "application/json"
-				},
-
-				data: JSON.stringify({
-					articleId: articleId.value
-				}),
-
-				onLoad (event) {
-					console.log(event);
-				}
-			});
-		}*/
+			onLoad (event) {
+				let medias = event.target.response.medias;
+			}
+		})
 	});
 
 	saveBtn.addEventListener("click", () => {

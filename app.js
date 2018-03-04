@@ -2,13 +2,11 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const multer = require("multer");
 const Util = require("./system/libraries/Util");
 const API = require("./system/libraries/API");
 const CONFIG = require("./system/config");
 
 const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
-const CommonUpload = multer({ dest: "./articles/images/" });
 
 
 
@@ -22,17 +20,19 @@ let app = express();
 	/**
 	 * Returns the article's infomation
 	 */
-	app.get("/api/article", (req, res) => {
+	app.get("/api/article/:id", (req, res) => {
+		let id = req.params.id;
+
 		try {
 			res.end(JSON.stringify({
 				status: "success",
 
-				id: req.query.id,
-				content: API.getArticle(req.query.id)
+				id,
+				content: API.getArticle(id)
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
 				error
 			}));
 		}
@@ -46,19 +46,18 @@ let app = express();
 
 		try {
 			API.deleteArticle(id);
+			CONFIG.onDelete(self, id);
+			
+			res.end(JSON.stringify({
+				status: "success",
+				id
+			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
 				error
 			}));
 		}
-
-		CONFIG.onDelete(self, id);
-
-		res.end(JSON.stringify({
-			status: "success",
-			id
-		}));
 	});
 
 	/**
@@ -66,15 +65,49 @@ let app = express();
 	 */
 	app.get("/api/articles", (req, res) => {
 		try {
-			let articles = API.getArticles();
-
 			res.end(JSON.stringify({
 				status: "success",
-				articles
+				articles: API.getArticles()
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Gets a list of common medias
+	 */
+	app.get("/api/medias", (req, res) => {
+		try {
+			res.end(JSON.stringify({
+				status: "success",
+				medias: API.getCommonMedias()
+			}));
+		} catch (error) {
+			res.end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Gets a list of article's medias
+	 */
+	app.get("/api/medias/:id", (req, res) => {
+		let id = req.params.id;
+
+		try {
+			res.end(JSON.stringify({
+				status: "success",
+				medias: API.getMedias(id)
+			}));
+		} catch (error) {
+			res.end(JSON.stringify({
+				status: "failure",
 				error
 			}));
 		}
@@ -88,19 +121,18 @@ let app = express();
 
 		try {
 			API.createArticle(id);
+			CONFIG.onCreate(self, id);
+
+			res.end(JSON.stringify({
+				status: "success",
+				id
+			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
 				error
 			}));
 		}
-
-		CONFIG.onCreate(self, id);
-
-		res.end(JSON.stringify({
-			status: "success",
-			id
-		}));
 	});
 
 	/**
@@ -116,21 +148,21 @@ let app = express();
 				createdAt,
 				content
 			}, null, "\t"));
+
+			CONFIG.onSave(self, id, path, { title, createdAt, content });
+
+			res.end(JSON.stringify({
+				status: "success",
+
+				id,
+				path
+			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
 				error
 			}));
 		}
-
-		CONFIG.onSave(self, id, path, { title, createdAt, content });
-
-		res.end(JSON.stringify({
-			status: "success",
-
-			id,
-			path
-		}));
 	});
 
 	/**
@@ -138,56 +170,31 @@ let app = express();
 	 */
 	app.post("/api/publish", (req, res) => {
 		let path = `publishes/${req.body.id}`;
-		let article, content;
 
 		try {
-			article = JSON.parse(API.getArticle(req.body.id)),
-			content = fs.readFileSync("template/index.html", "UTF-8");
+			let article = JSON.parse(API.getArticle(req.body.id)),
+				content = fs.readFileSync("template/index.html", "UTF-8");
 
 			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
 			if (fs.existsSync(path)) Util.removedirSync(path);
-			
 			Util.writeFileWithDirSync(`${path}/index.html`, content);
+
+			CONFIG.onPublish(self, req.body.id, path, content);
+
+			res.end(JSON.stringify({
+				status: "success",
+
+				id: req.body.id,
+				path,
+				content
+			}));
 		} catch (error) {
 			res.end(JSON.stringify({
-				status: "fail",
+				status: "failure",
 				error
 			}));
 		}
-
-		CONFIG.onPublish(self, req.body.id, path, content);
-
-		res.end(JSON.stringify({
-			status: "success",
-
-			id: req.body.id,
-			path,
-			content
-		}));
-	});
-
-	/**
-	 * Copys the photo to the common directory
-	 */
-	app.post("/api/media", CommonUpload.array("photos"), (req, res, err) => {
-		let commonMedias = API.getCommonMedias(),
-			uploadedMedias = req.files;
-
-		for (let i = 0; i < uploadedMedias.length; i++) {
-			API.renameMedia(uploadedMedias[i]);
-		}
-
-		res.end(JSON.stringify({
-			status: "success"
-		}));
-	});
-
-	/**
-	 * Deletes the photo from the common directory
-	 */
-	app.delete("/api/media/:mediaId", (req, res) => {
-
 	});
 
 	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
@@ -195,6 +202,7 @@ let app = express();
 	app.listen(CONFIG.PORT, () => {
 		if (!fs.existsSync("articles")) fs.mkdir("articles");
 		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
+		if (!fs.existsSync("medias")) fs.mkdir("medias");
 		if (!fs.existsSync("template")) fs.mkdir("template");
 
 		if (!fs.existsSync("template/index.html")) {

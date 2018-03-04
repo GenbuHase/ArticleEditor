@@ -31,18 +31,18 @@ Main {
 	Flex: 1;
 }
 
-#Editor-Content-Album {
+#Editor-Content-Medias {
 	Width: 20%;
 	Margin-Left: 1em;
 }
 
-#Editor-Content-Album > Section:Not(.tabs):Not([style*="display: none"]) {
+#Editor-Content-Medias > Section:Not(.tabs):Not([style*="display: none"]) {
 	Display: Flex !Important;
 	Flex-Direction: Row;
 	Justify-Content: Space-Around;
 	Align-Items: Center;
 }
 
-#Editor-Content-Album > Section:Not(.tabs) Img {
+#Editor-Content-Medias > Section:Not(.tabs) Img {
 	Width: 40%;
 }

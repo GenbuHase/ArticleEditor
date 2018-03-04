@@ -29,11 +29,12 @@ module.exports = class API {
 		if (fs.existsSync(`publishes/${id}`)) Util.removedirSync(`publishes/${id}`);
 	}
 
-	static getCommonMedias () {
-		return fs.readdirSync("articles/images");
+	static getMedias (id = 0) {
+		if (!fs.existsSync(`medias/${id}`)) fs.mkdirSync(`medias/${id}`);
+		return fs.readdirSync(`medias/${id}`);
 	}
 
-	static renameMedia (media) {
-		fs.rename(media.path, `${media.path}.${media.originalname.split(".").splice(-1)}`, error => null);
+	static getCommonMedias () {
+		return fs.readdirSync("medias/common");
 	}
 }

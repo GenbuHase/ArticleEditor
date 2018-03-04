@@ -73,35 +73,22 @@
 						<Label For = "Editor-Content-Text">記事内容</Label>
 					</Div>
 
-					<Div ID = "Editor-Content-Album">
+					<Div ID = "Editor-Content-Medias">
 						<UL Class = "tabs tabs-fixed-width">
 							<Li Class = "tab">
-								<A Class = "active" Href = "#Editor-Content-Album-InArticle">記事内</A>
+								<A Class = "active" Href = "#Editor-Content-Medias-InArticle">記事内</A>
 							</Li>
 			
 							<Li Class = "tab">
-								<A Href = "#Editor-Content-Album-InBlog">ブログ内</A>
+								<A Href = "#Editor-Content-Medias-InBlog">ブログ内</A>
 							</Li>
 						</UL>
 
-						<Form Method = "POST" Action = "/api/media" EncType = "multipart/form-data" Target = "uploader">
-							<Div Class = "input-field file-field">
-								<Div Class = "btn">
-									<Span>選択</Span>
-									<Input Name = "photos" ID = "Editor-Content-Album-ImagePicker" Type = "File" Multiple = "Multiple" />
-								</Div>
-	
-								<Div Class = "file-path-wrapper">
-									<Input Class = "file-path validate" Type = "Text" PlaceHolder = "画像を選択してください" />
-								</Div>
-							</Div>
-						</Form>
-
-						<Section ID = "Editor-Content-Album-InArticle">
+						<Section ID = "Editor-Content-Medias-InArticle" Class = "input-field">
 							
 						</Section>
 
-						<Section ID = "Editor-Content-Album-InBlog">
+						<Section ID = "Editor-Content-Medias-InBlog" Class = "input-field">
 							<Img Class = "z-depth-1" Src = "articles\images\9538b6e0baf9c0e1c498dad7c9e6fa1c.png" />
 							<Img Class = "z-depth-1" Src = "articles\images\a26d801fa0459ace80e5908add2c1586.jpg" />
 						</Section>
