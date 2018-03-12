@@ -1,5 +1,18 @@
+if (!this.module && this.window) {
+	module = {};
+	window.addEventListener("DOMContentLoaded", () => CONFIG = module.exports);
+}
+
 module.exports = {
 	PORT: 8005,
+
+	PATH: {
+		ARTICLE: "articles",
+		PUBLISH: "publishes",
+		MEDIA: "medias",
+		COMMONMEDIA: "medias/common",
+		TEMPLATE: "template"
+	},
 
 	VARIABLES: [
 		"title",
@@ -8,7 +21,8 @@ module.exports = {
 	],
 
 	onCreate(self, id = 0) {},
+	onDelete (self, id = 0) {},
 	onSave (self, id = 0, path = "", article = {}) {},
 	onPublish (self, id = 0, path = "", content = "") {},
-	onDelete (self, id = 0) {}
+	onUpload (self, id = 0, path = "") {}
 }

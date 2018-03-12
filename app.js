@@ -2,11 +2,14 @@ const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+const multer = require("multer");
 const Util = require("./system/libraries/Util");
 const API = require("./system/libraries/API");
 const CONFIG = require("./system/config");
 
 const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
+
+const CommonUpload = multer({ dest: `./${CONFIG.PATH.COMMONMEDIA}/` });
 
 
 
@@ -15,6 +18,7 @@ let app = express();
 	app.use(methodOverride());
 
 	app.use("", express.static(`${__dirname}/system/views/Editor`));
+	app.use("/config.js", express.static(`${__dirname}/system/config.js`));
 	app.use("/libraries", express.static(`${__dirname}/system/views/libraries`));
 
 	/**
@@ -68,6 +72,31 @@ let app = express();
 			res.end(JSON.stringify({
 				status: "success",
 				articles: API.getArticles()
+			}));
+		} catch (error) {
+			res.end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Uploads the selected medias to common directory
+	 */
+	app.post("/api/media", CommonUpload.array("medias"), (req, res) => {
+		let medias = req.files,
+			mediaPath = medias.length > 1 ? [] : "";
+
+		try {
+			for (let i = 0; i < medias.length; i++) {
+				let fixedPath = API.uploadMedia(medias[i]);
+				Array.isArray(mediaPath) ? mediaPath.push(fixedPath) : mediaPath = fixedPath;
+			}
+
+			res.end(JSON.stringify({
+				status: "success",
+				mediaPath
 			}));
 		} catch (error) {
 			res.end(JSON.stringify({
@@ -140,15 +169,10 @@ let app = express();
 	 */
 	app.post("/api/draft", (req, res) => {
 		let { id, title, createdAt, content } = req.body;
-		let path = `articles/${id}`;
+		let path = `${CONFIG.PATH.ARTICLE}/${id}.json`;
 
 		try {
-			fs.writeFileSync(`${path}/index.json`, JSON.stringify({
-				title,
-				createdAt,
-				content
-			}, null, "\t"));
-
+			API.saveArticle(id, { title, createdAt, content });
 			CONFIG.onSave(self, id, path, { title, createdAt, content });
 
 			res.end(JSON.stringify({
@@ -169,7 +193,8 @@ let app = express();
 	 * Generates the article's page
 	 */
 	app.post("/api/publish", (req, res) => {
-		let path = `publishes/${req.body.id}`;
+		let id = req.body.id,
+			path = `${CONFIG.PATH.PUBLISH}/${id}`;
 
 		try {
 			let article = JSON.parse(API.getArticle(req.body.id)),
@@ -177,10 +202,8 @@ let app = express();
 
 			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
-			if (fs.existsSync(path)) Util.removedirSync(path);
-			Util.writeFileWithDirSync(`${path}/index.html`, content);
-
-			CONFIG.onPublish(self, req.body.id, path, content);
+			API.publishArticle(id, content);
+			CONFIG.onPublish(self, id, path, content);
 
 			res.end(JSON.stringify({
 				status: "success",
@@ -197,16 +220,17 @@ let app = express();
 		}
 	});
 
-	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${req.url.replace(/%20/g, " ")}`));
+	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`));
 
 	app.listen(CONFIG.PORT, () => {
-		if (!fs.existsSync("articles")) fs.mkdir("articles");
-		if (!fs.existsSync("publishes")) fs.mkdir("publishes");
-		if (!fs.existsSync("medias")) fs.mkdir("medias");
-		if (!fs.existsSync("template")) fs.mkdir("template");
+		if (!fs.existsSync(CONFIG.PATH.ARTICLE)) fs.mkdir(CONFIG.PATH.ARTICLE);
+		if (!fs.existsSync(CONFIG.PATH.PUBLISH)) fs.mkdir(CONFIG.PATH.PUBLISH);
+		if (!fs.existsSync(CONFIG.PATH.MEDIA)) fs.mkdir(CONFIG.PATH.MEDIA);
+		if (!fs.existsSync(CONFIG.PATH.COMMONMEDIA)) fs.mkdir(CONFIG.PATH.COMMONMEDIA);
+		if (!fs.existsSync(CONFIG.PATH.TEMPLATE)) fs.mkdir(CONFIG.PATH.TEMPLATE);
 
-		if (!fs.existsSync("template/index.html")) {
-			fs.writeFile("template/index.html", [
+		if (!fs.existsSync(`${CONFIG.PATH.TEMPLATE}/index.html`)) {
+			fs.writeFile(`${CONFIG.PATH.TEMPLATE}/index.html`, [
 				'<!DOCTYPE html>',
 				'',
 				'<html>',

@@ -36,15 +36,19 @@ Main {
 	Margin-Left: 1em;
 }
 
-#Editor-Content-Medias > Section:Not(.tabs):Not([style*="display: none"]) {
-	Display: Flex !Important;
+#Editor-Content-Medias > Section > Form Button[Type="Submit"] {
+	Width: 100%;
+}
+
+#Editor-Content-Medias > Section > Album:Not([style*="display: none"]) {
+	Display: Flex !important;
 	Flex-Direction: Row;
 	Justify-Content: Space-Around;
 	Align-Items: Center;
 	Flex-Wrap: Wrap;
 }
 
-#Editor-Content-Medias > Section:Not(.tabs) Img {
+#Editor-Content-Medias > Section > Album Img {
 	Width: 40%;
 	Margin-Bottom: 1em;
 }

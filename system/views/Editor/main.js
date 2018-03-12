@@ -3,8 +3,9 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.getElementById("Editor-Info-Title");
 	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
 	const articleContent = document.getElementById("Editor-Content-Text");
-	const articleAlbum = document.getElementById("Editor-Content-Medias-InArticle");
-	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog");
+	const articleAlbum = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Album");
+	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Album");
+
 	const btns = document.getElementById("Editor-Btns");
 	const saveBtn = document.getElementById("Editor-Btns-Save");
 	const publishBtn = document.getElementById("Editor-Btns-Publish");
@@ -222,16 +223,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			let medias = event.target.response.medias;
 
 			for (let i = 0; i < medias.length; i++) {
-				commonAlbum.appendChild(new DOM("Img", {
-					classes: ["tooltipped", "z-depth-1"],
-					attributes: { Src: `medias/common/${medias[i]}` },
-
-					dataset: {
-						position: "bottom",
-						delay: 50,
-						tooltip: medias[i]
-					}
-				}));
+				commonAlbum.appendChild(Components.generateCommonThumbnail(medias[i]));
 			}
 
 			document.querySelectorAll(".tooltipped").forEach(tooltip => M.Tooltip.init(tooltip));
