@@ -87,7 +87,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			onLoad (event) {
 				let medias = event.target.response.medias;
 			}
-		})
+		});
 	});
 
 	saveBtn.addEventListener("click", () => {
@@ -209,6 +209,32 @@ window.addEventListener("DOMContentLoaded", () => {
 			}
 
 			M.Select.init(articleId);
+		}
+	});
+
+	DOM.xhr({
+		type: "GET",
+		url: `/api/medias`,
+		resType: "json",
+		doesSync: true,
+
+		onLoad (event) {
+			let medias = event.target.response.medias;
+
+			for (let i = 0; i < medias.length; i++) {
+				commonAlbum.appendChild(new DOM("Img", {
+					classes: ["tooltipped", "z-depth-1"],
+					attributes: { Src: `medias/common/${medias[i]}` },
+
+					dataset: {
+						position: "bottom",
+						delay: 50,
+						tooltip: medias[i]
+					}
+				}));
+			}
+
+			document.querySelectorAll(".tooltipped").forEach(tooltip => M.Tooltip.init(tooltip));
 		}
 	});
 });

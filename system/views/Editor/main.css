@@ -41,8 +41,10 @@ Main {
 	Flex-Direction: Row;
 	Justify-Content: Space-Around;
 	Align-Items: Center;
+	Flex-Wrap: Wrap;
 }
 
 #Editor-Content-Medias > Section:Not(.tabs) Img {
 	Width: 40%;
+	Margin-Bottom: 1em;
 }
