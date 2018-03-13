@@ -27,7 +27,7 @@ Main {
 	Width: 60%;
 }
 
-#Editor-Content > Div:First-Child {
+#Editor-Content > *:First-Child {
 	Flex: 1;
 }
 

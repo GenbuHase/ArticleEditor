@@ -70,10 +70,29 @@
 				</Section>
 
 				<Section ID = "Editor-Content">
-					<Div Class = "input-field">
-						<Textarea ID = "Editor-Content-Text" Class = "materialize-textarea"></Textarea>
-						<Label For = "Editor-Content-Text">記事内容</Label>
-					</Div>
+					<Section>
+						<Div Class = "input-field">
+							<Textarea ID = "Editor-Content-Text" Class = "materialize-textarea"></Textarea>
+							<Label For = "Editor-Content-Text">記事内容</Label>
+						</Div>
+
+						<Section ID = "Editor-Btns">
+							<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
+								<I Class = "material-icons left">save</I>
+								下書き保存
+							</A>
+
+							<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
+								<I Class = "material-icons left">publish</I>
+								記事ページ生成
+							</A>
+
+							<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
+								<I Class = "material-icons left">remove</I>
+								記事削除
+							</A>
+						</Section>
+					</Section>
 
 					<Div ID = "Editor-Content-Medias">
 						<UL Class = "tabs tabs-fixed-width">
@@ -91,7 +110,7 @@
 								<Div Class = "file-field">
 									<Div Class = "btn">
 										<Span>選択</Span>
-										<Input Name = "medias" ID = "Editor-Content-Album-MediaPicker" Type = "File" Multiple = "Multiple" />
+										<Input Name = "medias" ID = "Editor-Content-Medias-InArticle-MediaPicker" Type = "File" Multiple = "Multiple" />
 									</Div>
 	
 									<Div Class = "file-path-wrapper">
@@ -111,7 +130,7 @@
 								<Div Class = "file-field">
 									<Div Class = "btn">
 										<Span>選択</Span>
-										<Input Name = "medias" ID = "Editor-Content-Album-MediaPicker" Type = "File" Multiple = "Multiple" />
+										<Input Name = "medias" ID = "Editor-Content-Medias-InBlog-MediaPicker" Type = "File" Multiple = "Multiple" />
 									</Div>
 	
 									<Div Class = "file-path-wrapper">
@@ -126,23 +145,6 @@
 							</Album>
 						</Section>
 					</Div>
-				</Section>
-
-				<Section ID = "Editor-Btns">
-					<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
-						<I Class = "material-icons left">save</I>
-						下書き保存
-					</A>
-
-					<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
-						<I Class = "material-icons left">publish</I>
-						記事ページ生成
-					</A>
-
-					<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
-						<I Class = "material-icons left">remove</I>
-						記事削除
-					</A>
 				</Section>
 			</Section>
 

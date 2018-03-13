@@ -3,7 +3,10 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.getElementById("Editor-Info-Title");
 	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
 	const articleContent = document.getElementById("Editor-Content-Text");
+	
+	const articleMediaPicker = document.getElementById("Editor-Content-Medias-InArticle-MediaPicker");
 	const articleAlbum = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Album");
+	const commonMediaPicker = document.getElementById("Editor-Content-Medias-InBlog-MediaPicker");
 	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Album");
 
 	const btns = document.getElementById("Editor-Btns");
