@@ -198,7 +198,7 @@ let app = express();
 
 		try {
 			let article = JSON.parse(API.getArticle(req.body.id)),
-				content = fs.readFileSync("template/index.html", "UTF-8");
+				content = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8");
 
 			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
 
