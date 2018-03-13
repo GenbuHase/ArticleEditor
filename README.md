@@ -2,37 +2,41 @@
 
 [![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg?branch=AE-1.1.0)](https://travis-ci.org/GenbuHase/ArticleEditor)
 
-ブログ形式サイトのための記事編集ツール
+A tool for bloggers without any blog services
 
-## 概要 | Description
-このツールを使うと、簡単にブログ形式サイトの記事を執筆することが出来ます。
+## Other Languages
+* [日本語 | Japanese](/README[Japanese].md)
 
-## 主な機能 | Features
-* テンプレートHTMLを利用した記事生成
-* 記事のID管理
-* 軽快な動作
+## Description
+You could create any articles easily if you used "Article Editor".
 
-## 動作環境・開発環境 | Requirement
+## Features
+* Generates any articles with a template
+* Manages a list of article ids
+* Runs Smoothly
+
+## Requirement
 * [Node.js](https://nodejs.org/)
 * [express](https://npmjs.com/package/express)
 * [method-override](https://npmjs.com/package/method-override)
+* [multer](https://npmjs.com/package/multer)
 
-## 使用方法 | How to Use
-初回実行時、必要なディレクトリが生成されます。
+## How to Use
+Some folders will be generated for the first time.
 
-1.	`template/index.html`(以下テンプレートHTML)を編集します。<Br />
-	テンプレートHTML内では、以下の特殊変数が利用できます。
+1.	Edit `template/index.html`(template).<Br />
+	You can provide special variables in a template.
 
-	* `${title}` ... 記事タイトル
-	* `${createdAt}` ... 記事作成日
-	* `${content}` ... 記事内容
+	* `${title}` ... Article's title
+	* `${createdAt}` ... Article's date
+	* `${content}` ... Article's content
 	
-2.	Article Editorを起動するために`run.cmd`か`npm start`を実行します。
-3.	起動後、[http://localhost:8005](http://localhost:8005)にアクセスします。
-4.	ページの指示に従って執筆しましょう！
+2.	Execute `npm start` to run this tool.
+3.	View [http://localhost:8005](http://localhost:8005) after running.
+4.	Create your articles following instructions!
 
-## インストール方法 | Installation
-以下のコマンドを実行してください。
+## Installation
+Execute these commands.
 
 ```
 $ git clone https://github.com/GenbuHase/ArticleEditor.git
@@ -40,8 +44,8 @@ $ cd ArticleEditor
 $ npm install
 ```
 
-## 作者 | Author
-* [Genbu Hase](https://github.com/GenbuHase)
+## Author
+[Genbu Hase](https://github.com/GenbuHase)
 
-## ライセンス | License
+## License
 [MIT License](https://github.com/GenbuHase/ArticleEditor/blob/master/LICENSE)
