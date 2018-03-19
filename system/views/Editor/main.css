@@ -36,11 +36,15 @@ Main {
 	Margin-Left: 1em;
 }
 
+#Editor-Content-Medias > Section > Form IFrame {
+	Display: None;
+}
+
 #Editor-Content-Medias > Section > Form Button[Type="Submit"] {
 	Width: 100%;
 }
 
-#Editor-Content-Medias > Section > Album:Not([style*="display: none"]) {
+#Editor-Content-Medias > Section > Album {
 	Display: Flex !important;
 	Flex-Direction: Row;
 	Justify-Content: Space-Around;

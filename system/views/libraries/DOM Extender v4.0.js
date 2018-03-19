@@ -1,6 +1,6 @@
 /*/
  *#######################################################################
- *DOM Extender v3.5
+ *DOM Extender v4.0
  *Copyright (C) 2016 Genbu Project All Rights Reversed.
  *#######################################################################
 /*/
@@ -8,19 +8,23 @@
 	Object.defineProperties(Object.prototype, {
 		getClassName: {
 			/**
-			 * @returns {String}
+			 * Returns a type of this instance
+			 * 
+			 * @returns {String} An instance type
 			 */
 			value () {
 				return Object.prototype.toString.call(this).slice(8, -1);
 			}
 		},
-
+		
 		isStrictObject: {
 			/**
-			 * @param {Object} [obj=undefined]
-			 * @returns {Boolean}
+			 * Detects how it is type of Object
+			 * 
+			 * @param {Object} obj An object detected
+			 * @returns {Boolean} How it is type of Object
 			 */
-			value (obj = undefined) {
+			value (obj) {
 				if (obj !== undefined) {
 					return (obj.getClassName() !== "String" && obj.getClassName() !== "Number" && obj instanceof Object && !Array.isArray(obj));
 				} else {
@@ -31,10 +35,12 @@
 
 		isStrictArray: {
 			/**
-			 * @param {Object} [obj=undefined]
-			 * @returns {Boolean}
+			 * Detects how it is type of Array
+			 * 
+			 * @param {Object} obj An object detected
+			 * @returns {Boolean} How it is type of Array
 			 */
-			value (obj = undefined) {
+			value (obj) {
 				if (obj !== undefined) {
 					return (obj.getClassName() !== "String" && obj.getClassName() !== "Number" && obj instanceof Array && Array.isArray(obj));
 				} else {
@@ -45,10 +51,12 @@
 
 		connect: {
 			/**
+			 * Combines with separators
+			 * 
 			 * @param {String} [valueSeparator="="]
 			 * @param {String} [paramSeparator="&"]
 			 * 
-			 * @returns {String}
+			 * @returns {String} A combined data
 			 */
 			value (valueSeparator = "=", paramSeparator = "$") {
 				let result = [];
@@ -63,10 +71,12 @@
 
 		toQueryString: {
 			/**
-			 * @param {Object} [obj=undefined]
-			 * @returns {String}
+			 * Converts an object to querys
+			 * 
+			 * @param {Object} obj An object converted
+			 * @returns {String} A converted data
 			 */
-			value (obj = undefined) {
+			value (obj) {
 				return "?" + Object.prototype.connect.call(obj || this, "=", "&");
 			}
 		}
@@ -75,7 +85,9 @@
 	Object.defineProperties(String.prototype, {
 		removeOverlay: {
 			/**
-			 * @returns {String}
+			 * Removes same characters
+			 * 
+			 * @returns {String} A formatted sentence
 			 */
 			value () {
 				let result = this.split("");
@@ -89,8 +101,10 @@
 
 		replaces: {
 			/**
-			 * @param {String[][]} replaceStrs
-			 * @returns {String}
+			 * Replaces with multi datas
+			 * 
+			 * @param {String[][]} replaceStrs A collection of replace arguments
+			 * @returns {String} A formatted sentence
 			 */
 			value (replaceStrs) {
 				let res = this;
@@ -105,7 +119,9 @@
 
 		hasUrlString: {
 			/**
-			 * @returns {Boolean}
+			 * Detects how it has any URLs
+			 * 
+			 * @returns {Boolean} How it has any URLs
 			 */
 			value () {
 				return (this.match(/((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g) ? true : false);
@@ -116,8 +132,10 @@
 	Object.defineProperties(Window.prototype, {
 		importScript: {
 			/**
-			 * @param {String} [url=""]
-			 * @param {function (Event)} [onLoad=function (event) {}]
+			 * Imports scripts
+			 * 
+			 * @param {String} [url=""] A script's url
+			 * @param {function (Event)} [onLoad=function (event) {}] A callback, called when it'll have been loaded
 			 */
 			value (url = "", onLoad = (event) => {}) {
 				if (!(() => {
@@ -141,8 +159,10 @@
 
 		btoaAsUTF8: {
 			/**
-			 * @param {String} [str=""]
-			 * @returns {String}
+			 * Executes btoa with UTF-8
+			 * 
+			 * @param {String} [str=""] A plain data
+			 * @returns {String} A base64 data
 			 */
 			value (str = "") {
 				return btoa(unescape(encodeURIComponent(str)));
@@ -151,8 +171,10 @@
 
 		atobAsUTF8: {
 			/**
-			 * @param {String} [base64Str=""]
-			 * @returns {String}
+			 * Executes atob with UTF-8
+			 * 
+			 * @param {String} [base64Str=""] A base64 data
+			 * @returns {String} A plain data
 			 */
 			value (base64Str = "") {
 				return decodeURIComponent(escape(atob(base64Str)));
@@ -161,8 +183,10 @@
 
 		urlSafe: {
 			/**
-			 * @param {String} [url=""]
-			 * @returns {String}
+			 * Formats an URL to safe one
+			 * 
+			 * @param {String} [url=""] An URL
+			 * @returns {String} A safe URL
 			 */
 			value (url = "") {
 				return url.replace(/\+/g, '-').replace(/\//g, '_');
@@ -174,12 +198,14 @@
 		Script: {
 			value: class Script {
 				/**
-				 * @param {String} [url=undefined]
-				 * @param {Object} [option={}]
-				 * @param {Boolean} [option.async=false]
-				 * @param {Boolean} [option.defer=false]
+				 * Creates an instance of Script
 				 * 
-				 * @returns {HTMLScriptElement}
+				 * @param {String} [url=undefined] A script's url
+				 * @param {Object} [option={}] A collection of options
+				 * @param {Boolean} [option.async=false] How async is enabled
+				 * @param {Boolean} [option.defer=false] How defer is enabled
+				 * 
+				 * @returns {HTMLScriptElement} A script element
 				 */
 				constructor (url = undefined, option = { async: false, defer: false }) {
 					let elem = document.createElement("script");
@@ -195,8 +221,10 @@
 		Style: {
 			value: class Style {
 				/**
-				 * @param {Object} [data={}]
-				 * @returns {HTMLStyleElement}
+				 * Creates an instance of Style
+				 * 
+				 * @param {Object} [data={}] A collection of composing style datas
+				 * @returns {HTMLStyleElement} A style element
 				 */
 				constructor (data = {}) {
 					let elem = document.createElement("style");
@@ -225,35 +253,35 @@
 		},
 
 		InlineStyle: {
-			value: (() => {
-				/**
-				* @param {Object} data
-				* @returns {String}
-				*/
-				function InlineStyle (data) {
-					if (this.constructor.name == arguments.callee.prototype.constructor.name) throw new TypeError("it is not a constructor");
-					
-					let mem = [];
-					
-					for (let styleName in data) {
-						mem.push(styleName + ": " + data[styleName] + ";");
-					}
-					
-					return mem.join(" ");
-				};
-
-				return InlineStyle;
-			})()
+			/**
+			 * Returns a style data for embedding
+			 * 
+			 * @param {Object} data A collection of composing style datas
+			 * @returns {String} A style data for embedding
+			 */
+			value (data) {
+				if (this.constructor.name == arguments.callee.prototype.constructor.name) throw new TypeError("it is not a constructor");
+				
+				let mem = [];
+				
+				for (let styleName in data) {
+					mem.push(styleName + ": " + data[styleName] + ";");
+				}
+				
+				return mem.join(" ");
+			}
 		},
 
 		Canvas: {
 			value: class Canvas {
 				/**
-				* @param {Number} [width=0]
-				* @param {Number} [height=0]
-				* 
-				* @returns {HTMLCanvasElement}
-				*/
+				 * Creates an instance of Canvas
+				 * 
+				 * @param {Number} [width=0] The width of canvas
+				 * @param {Number} [height=0] The height of canvas
+				 * 
+				 * @returns {HTMLCanvasElement} A canvas element
+				 */
 				constructor (width = 0, height = 0) {
 					let elem = document.createElement("canvas");
 						elem.width = width;
@@ -267,11 +295,13 @@
 		Svg: {
 			value: class Svg {
 				/**
-				* @param {Number} [width=0]
-				* @param {Number} [height=0]
-				* 
-				* @returns {SVGSVGElement}
-				*/
+				 * Creates an instance of Svg
+				 * 
+				 * @param {Number} [width=0] The width of svg
+				 * @param {Number} [height=0] The height of svg
+				 * 
+				 * @returns {SVGSVGElement} A svg element
+				 */
 				constructor (width = 0, height = 0) {
 					let elem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 						elem.setAttribute("version", "1.1");
@@ -287,16 +317,18 @@
 				static get Rect () {
 					return class Rect {
 						/**
-						* @param {Object} [option={}]
-						* @param {Number} [option.x=0]
-						* @param {Number} [option.y=0]
-						* @param {Number} [option.width=0]
-						* @param {Number} [option.height=0]
-						* @param {String} [option.fill="#000000"]
-						* @param {Object} option.params
-						* 
-						* @returns {SVGRectElement}
-						*/
+						 * Creates an instance of Rect
+						 * 
+						 * @param {Object} [option={}] A collection of options
+						 * @param {Number} [option.x=0] A point of x-axis
+						 * @param {Number} [option.y=0] A point of y-axis
+						 * @param {Number} [option.width=0] Width of rect
+						 * @param {Number} [option.height=0] Height of rect
+						 * @param {String} [option.fill="#000000"] A color for filling
+						 * @param {Object} option.params Other options
+						 * 
+						 * @returns {SVGRectElement} A rect element
+						 */
 						constructor (option = { x: 0, y: 0, width: 0, height: 0, fill: "#000000" }) {
 							let elem = document.createElementNSWithParam("http://www.w3.org/2000/svg", "rect", option.params);
 								elem.setAttribute("x", option.x);
@@ -314,15 +346,17 @@
 				static get Circle () {
 					return class Circle {
 						/**
-						* @param {Object} [option={}]
-						* @param {Number} [option.x=0]
-						* @param {Number} [option.y=0]
-						* @param {Number} [option.radius=0]
-						* @param {String} [option.fill="#000000"]
-						* @param {Object} option.params
-						* 
-						* @returns {SVGCircleElement}
-						*/
+						 * Creates an instance of Circle
+						 * 
+						 * @param {Object} [option={}] A collection of options
+						 * @param {Number} [option.x=0] A point of x-axis
+						 * @param {Number} [option.y=0] A point of y-axis
+						 * @param {Number} [option.radius=0] A radius of circle
+						 * @param {String} [option.fill="#000000"] A color for filling
+						 * @param {Object} option.params Other options
+						 * 
+						 * @returns {SVGCircleElement} A circle element
+						 */
 						constructor (option = { x: 0, y: 0, radius: 0, fill: "#000000" }) {
 							let elem = document.createElementNSWithParam("http://www.w3.org/2000/svg", "circle", option.params);
 								elem.setAttribute("cx", option.x);
@@ -339,15 +373,17 @@
 				static get Text () {
 					return class Text {
 						/**
-						* @param {Object} [option={}]
-						* @param {Number} [option.x=0]
-						* @param {Number} [option.y=0]
-						* @param {Number} [option.rotate=0]
-						* @param {String} [option.value=""]
-						* @param {Object} option.params
-						* 
-						* @returns {SVGTextElement}
-						*/
+						 * Creates an instance of Text
+						 * 
+						 * @param {Object} [option={}] A collection of options
+						 * @param {Number} [option.x=0] A point of x-axis
+						 * @param {Number} [option.y=0] A point of y-axis
+						 * @param {Number} [option.rotate=0] Degree of characters
+						 * @param {String} [option.value=""] An text
+						 * @param {Object} option.params Other options
+						 * 
+						 * @returns {SVGTextElement} A text element
+						 */
 						constructor (option = { x: 0, y: 0, rotate: 0, value: "" }) {
 							let elem = document.createElementNSWithParam("http://www.w3.org/2000/svg", "text", option.params);
 								elem.textContent = option.value;
@@ -362,24 +398,28 @@
 				}
 
 				/**
-				* @param {Number} [r=0]
-				* @param {Number} [g=0]
-				* @param {Number} [b=0]
-				* 
-				* @returns {String}
-				*/
+				 * Return a color
+				 * 
+				 * @param {Number} [r=0] Red
+				 * @param {Number} [g=0] Green
+				 * @param {Number} [b=0] Blue
+				 * 
+				 * @returns {String} A color
+				 */
 				static RGB (r = 0, g = 0, b = 0) {
 					return `RGB(${r}, ${g}, ${b})`;
 				}
 
 				/**
-				* @param {Number} [r=0]
-				* @param {Number} [g=0]
-				* @param {Number} [b=0]
-				* @param {Number} [a=1]
-				* 
-				* @returns {String}
-				*/
+				 * Returns a color
+				 * 
+				 * @param {Number} [r=0] Red
+				 * @param {Number} [g=0] Green
+				 * @param {Number} [b=0] Blue
+				 * @param {Number} [a=1] Alpha
+				 * 
+				 * @returns {String} A color
+				 */
 				static RGBA (r = 0, g = 0, b = 0, a = 1) {
 					return `RGBA(${r}, ${g}, ${b}, ${a})`;
 				}
@@ -390,16 +430,12 @@
 	Object.defineProperties(Node.prototype, {
 		appendTo: {
 			/**
-			* @param {Node} [parent=document.body]
-			*/
+			 * Appends to selected element
+			 * 
+			 * @param {Node} [parent=document.body] The element
+			 */
 			value (parent = document.body) {
 				parent.appendChild(this);
-			}
-		},
-
-		dismiss: {
-			value () {
-				this.parentElement.removeChild(this);
 			}
 		}
 	});
@@ -407,17 +443,19 @@
 	Object.defineProperties(Element.prototype, {
 		applyProperties: {
 			/**
-			* @param {Object} [option={}]
-			* @param {String} option.id
-			* @param {Object} option.classes
-			* @param {String} option.text
-			* @param {String} option.html
-			* @param {Object} option.attributes
-			* @param {Object} option.dataset
-			* @param {Object} option.styles
-			* @param {Node[]} option.children
-			* @param {Object} option.events
-			*/
+			 * Dispatches options to element
+			 * 
+			 * @param {Object} [option={}] A collection of options
+			 * @param {String} option.id The element's id
+			 * @param {Object} option.classes A collection of the element's classes
+			 * @param {String} option.text The element's text
+			 * @param {String} option.html The element's html-text
+			 * @param {Object} option.attributes A collection of the element's attributes
+			 * @param {Object} option.dataset A collection of the element's datasets
+			 * @param {Object} option.styles A collection of the element's styles
+			 * @param {Node[]} option.children A collection of the element's children
+			 * @param {Object} option.events A collection of events connected with the element
+			 */
 			value (option = {}) {
 				(option.id != false && !option.id) || (this.id = option.id);
 				
@@ -462,11 +500,13 @@
 	Object.defineProperties(Document.prototype, {
 		createElementWithParam: {
 			/**
-			* @param {String} tagName
-			* @param {Object} [option={}]
-			* 
-			* @returns {HTMLElement}
-			*/
+			 * Creates an element
+			 * 
+			 * @param {String} tagName An element's name
+			 * @param {Object} [option={}] A collection of element options
+			 * 
+			 * @returns {HTMLElement} An element
+			 */
 			value (tagName, option = {}) {
 				let elem = document.createElement(tagName);
 					elem.applyProperties(option);
@@ -477,12 +517,14 @@
 
 		createElementNSWithParam: {
 			/**
-			* @param {String} nameSpace
-			* @param {String} tagName
-			* @param {Object} [option={}]
-			* 
-			* @returns {HTMLElement}
-			*/
+			 * Creates an element with a namespace
+			 * 
+			 * @param {String} nameSpace An element's namespace
+			 * @param {String} tagName An element's name
+			 * @param {Object} [option={}] A collection of element options
+			 * 
+			 * @returns {HTMLElement} An element
+			 */
 			value (nameSpace, tagName, option = {}) {
 				let elem = document.createElementNS(nameSpace, tagName);
 					elem.applyProperties(option);
@@ -495,8 +537,10 @@
 	Object.defineProperties(Image.prototype, {
 		getImageData: {
 			/**
-			* @returns {ImageData}
-			*/
+			 * Returns an ImageData of this image
+			 * 
+			 * @returns {ImageData} An ImageData of this image
+			 */
 			value () {
 				this.crossOrigin = this.crossOrigin || "anonymous";
 
@@ -513,8 +557,10 @@
 
 		toSvg: {
 			/**
-			* @returns {SVGSVGElement}
-			*/
+			 * Converts to Svg data
+			 * 
+			 * @returns {SVGSVGElement} Svg data
+			 */
 			value () {
 				this.crossOrigin = this.crossOrigin || "anonymous";
 				
@@ -544,8 +590,10 @@
 	Object.defineProperties(Location.prototype, {
 		querySort: {
 			/**
-			* @returns {Object}
-			*/
+			 * Returns current querys
+			 * 
+			 * @returns {Object} A formatted collection of querys
+			 */
 			value () {
 				let querys = {};
 				
@@ -559,8 +607,10 @@
 
 		getIPs: {
 			/**
-			* @param {function (Object)} [onLoad=function (res) {}]
-			*/
+			 * Gets IPs
+			 * 
+			 * @param {function (Object)} [onLoad=function (res) {}] A callback, called when it'll have finished
+			 */
 			value (onLoad = (res) => {}) {
 				let iframe = document.createElement("iframe");
 					iframe.style.display = "None";
@@ -630,8 +680,10 @@
 	Object.defineProperties(Navigator.prototype, {
 		isMobile: {
 			/**
-			* @returns {Boolean}
-			*/
+			 * Detects how the user is visiting with mobile
+			 * 
+			 * @returns {Boolean} How the user is visiting with mobile
+			 */
 			value () {
 				let checker = new MobileDetect(window.navigator.userAgent);
 
@@ -640,27 +692,15 @@
 		}
 	});
 
-
-
-	Object.defineProperties(Math, {
-		radicalRoot: {
-			/**
-			* @param {Number} base
-			* @param {Number} exponent
-			* 
-			* @returns {Number}
-			*/
-			value (base, exponent) {
-				return Math.pow(base, 1 / exponent);
-			}
-		}
-	});
+	
 
 	Object.defineProperties(Math.random, {
 		randomInt: {
 			/**
-			* @returns {Number}
-			*/
+			 * Returns any integer
+			 * 
+			 * @returns {Number} Any integer
+			 */
 			value () {
 				let result = 0;
 
@@ -678,9 +718,11 @@
 	Object.defineProperties(URL, {
 		filter: {
 			/**
-			* @param {String} [str=""]
-			* @returns {String[] | []}
-			*/
+			 * Returns a collection of URLs in a sentence
+			 * 
+			 * @param {String} [str=""] A sentence
+			 * @returns {String[] | []} A collection of URLs
+			 */
 			value (str = "") {
 				let res = str.match(/((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g);
 					!res || (res = res.filter((elem, index, parent) => {
@@ -709,9 +751,8 @@ class DOM {
 	 * => ${:elemName} … elemNameセレクタの1要素を返す
 	 * => @{:elemName} … elemNameセレクタの要素を返す
 	 * 
-	 * @param {String} [selectorStr=""]
-	 * 
-	 * @param {Object} [option={}]
+	 * @param {String} [selectorStr=""] A selector
+	 * @param {Object} [option={}] An element's option(See document.createElementWithParam)
 	 * @param {String} option.id
 	 * @param {Object} option.classes
 	 * @param {String} option.text
@@ -722,7 +763,7 @@ class DOM {
 	 * @param {Node[]} option.children
 	 * @param {Object} option.events
 	 * 
-	 * @returns {HTMLElement}
+	 * @returns {HTMLElement} An element
 	 */
 	constructor (selectorStr = "", option = {}) {
 		let elem = null;
@@ -772,51 +813,52 @@ class DOM {
 
 
 	/**
-	 * @param {Object} [option={}]
-	 * @param {String} [option.type="GET"]
-	 * @param {String} [option.url=location.href]
-	 * @param {Boolean} [option.doesSync=false]
-	 * @param {String} option.resType
-	 * @param {Object} option.headers
-	 * @param {Object} option.params
-	 * @param {Object} option.data
-	 * @param {function (ProgressEvent)} [option.onLoad=function (event) {}]
+	 * Connects to the URL
 	 * 
-	 * @returns {Promise}
+	 * @param {Object} [option={}] A collection of connecting options
+	 * @param {String} [option.type="GET"] A connecting method
+	 * @param {String} [option.url=location.href] Where the connector will connect
+	 * @param {Boolean} [option.doesSync=false] How the connector will connect asynchronously
+	 * @param {String} option.resType A response type
+	 * @param {Object} option.headers the connector's headers
+	 * @param {Object} option.params A collection of query strings
+	 * @param {Object} option.data A data for sending
+	 * @param {function (ProgressEvent)} [option.onLoad=function (event) {}] A callback, called when the connector will have connected
+	 * 
+	 * @returns {Promise} The connector
 	 */
 	static xhr (option = { type: "GET", url: location.href, doesSync: false, onLoad: (event) => {} }) {
-		return new Promise((resolve, reject) => {
-			let connector = new XMLHttpRequest();
-				!option.resType || (connector.responseType = option.resType);
-				
-				connector.open(option.type, option.url + (option.params ? "?" + (() => {
-					let param = [];
+		let connector = new XMLHttpRequest();
+			!option.resType || (connector.responseType = option.resType);
+			
+			connector.open(option.type, option.url + (option.params ? "?" + (() => {
+				let param = [];
 
-					for (let paramName in option.params) {
-						param.push(paramName + "=" + option.params[paramName]);
-					}
+				for (let paramName in option.params) {
+					param.push(paramName + "=" + option.params[paramName]);
+				}
 
-					return param.join("&");
-				})() : ""), option.doesSync);
+				return param.join("&");
+			})() : ""), option.doesSync);
 
-				!option.headers || (() => {
-					for (let headerName in option.headers) {
-						connector.setRequestHeader(headerName, option.headers[headerName]);
-					}
-				})();
+			!option.headers || (() => {
+				for (let headerName in option.headers) {
+					connector.setRequestHeader(headerName, option.headers[headerName]);
+				}
+			})();
 
-				connector.addEventListener("load", event => resolve(event));
-				connector.onload = option.onLoad;
-				connector.send(option.data);
+			connector.addEventListener("load", option.onLoad);
+			connector.send(option.data);
 
-			return connector;
-		});
+		return connector;
 	}
 
 	/**
-	 * @param {Object} [option={}]
-	 * @param {String} [option.url=location.href]
-	 * @param {Object} option.params
+	 * Does a Jsonp request
+	 * 
+	 * @param {Object} [option={}] A collection of requesting options
+	 * @param {String} [option.url=location.href] Where it will connect
+	 * @param {Object} option.params A collection of query strings
 	 */
 	static jsonp (option = { url: location.href }) {
 		let param = [];
@@ -836,115 +878,54 @@ class DOM {
 			
 		document.head.appendChild(elem);
 	}
-	
-	static get rest () {
-		return class rest {
-			/**
-			 * @param {Object} [option={}]
-			 * @returns {XMLHttpRequest}
-			 */
-			constructor (option = {}) {
-				return this.xhr({
-					type: option.type,
-					url: option.url,
-					doesSync: option.doesSync,
 
-					headers: option.headers,
-					params: option.params,
-					data: option.data,
-
-					onLoad (event) {
-						!option.onLoad || option.onLoad(eval(event.target.response));
-					}
-				});
-			}
-
-
-
-			/**
-			 * @param {ProgressEvent} eventObj
-			 * @returns {Location}
-			 */
-			static calcResources (eventObj) {
-				/**
-				 * @type {Location}
-				 */
-				let loc = JSON.parse(JSON.stringify(window.location));
-					loc.__proto__ = Location.prototype;
-					
-					loc.href = eventObj.target.responseURL;
-					loc.protocol = loc.href.match(/(https|http|file|ftp):\/\/\/?/g)[0];
-					loc.pathname = "/" + loc.href.split(/\//g)[loc.href.split(/\//g).length - 1].split("?")[0];
-					loc.search = "?" + loc.href.split(/\//g)[loc.href.split(/\//g).length - 1].split("?")[1];
-					
-					loc.origin = loc.href.replaces([[loc.pathname, ""], [loc.search, ""]]);
-					loc.host = loc.href.replaces([[loc.protocol, ""], [loc.pathname, ""], [loc.search, ""]]);
-					loc.port = loc.host.split(":")[1] ? loc.host.split(":")[1] : "";
-					loc.hostname = loc.host.replace(":" + loc.port, "");
-
-				return loc;
-			}
-		}
-	}
 
 	/**
-	 * @param {String} [url=""]
-	 * @param {function (ProgressEvent)} [onLoad=function (event) {}]
+	 * Utilizes
 	 */
-	static import (url = "", onLoad = (event) => {}) {
-		this.xhr({
-			type: "GET",
-			url: url,
-			doesSync: true,
-
-			onLoad: (event) => {
-				if (event.target.response.match("#{using} DOMExtender")) {
-					eval(event.target.response)(apiInfo);
-					onLoad(event);
-				} else {
-					throw new EvalError("Load the API for only DOM Extender")
-				}
-			}
-		});
-	}
-
-
-
 	static get Util () {
 		const Util = {
 			/**
-			 * @param {Number} degree
-			 * @returns {Number}
+			 * Converts a degree to radian
+			 * 
+			 * @param {Number} degree A degree
+			 * @returns {Number} A radian
 			 */
 			degToRad (degree) {
 				return degree * Math.PI / 180;
 			},
 
 			/**
-			 * @param {Number} radian
-			 * @returns {Number}
+			 * Converts a radian to degree
+			 * 
+			 * @param {Number} radian A radian
+			 * @returns {Number} A degree
 			 */
 			radToDeg (radian) {
 				return radian * 180 / Math.PI;
 			},
 
 			/**
-			 * @param {any} obj
-			 * @param {any} initValue
+			 * Initializes with a value
 			 * 
-			 * @returns {any}
+			 * @param {any} obj A parameter
+			 * @param {any} initValue A value for init
+			 * 
+			 * @returns {any} An initialized object
 			 */
 			paramInit (obj, initValue) {
 				return (obj != false && !obj) ? initValue : obj;
 			},
 
 			/**
-			 * @param {Number} [width=0]
-			 * @param {Number} [height=0]
-			 * @param {Number} [basisWidth=window.outerWidth]
-			 * @param {Number} [basisHeight=window.outerHeight]
+			 * Gets a centered client rect
 			 * 
-			 * @returns {ClientRect}
+			 * @param {Number} [width=0] Width of an area
+			 * @param {Number} [height=0] Height of an area
+			 * @param {Number} [basisWidth=window.outerWidth] A point of base width
+			 * @param {Number} [basisHeight=window.outerHeight] A point of base height
+			 * 
+			 * @returns {ClientRect} An area
 			 */
 			getCenteredBoundingClientRect (width = 0, height = 0, basisWidth = window.outerWidth, basisHeight = window.outerHeight) {
 				return Object.create(ClientRect.prototype, {
@@ -962,29 +943,21 @@ class DOM {
 		return Util;
 	}
 
-	static get APIInfo () {
-		return class APIInfo {
-			/**
-			 * @param {String} [apiName="Untitled API"]
-			 * @param {Number} [apiVersion=1.0]
-			 */
-			constructor (apiName = "Untitled API", apiVersion = 1.0) {
-				this.name = apiName,
-				this.version = apiVersion;
-			}
-		}
-	}
-
+	/**
+	 * Watcher Class
+	 */
 	static get Watcher () {
 		let watchers = [];
 
 		return class Watcher {
 			/**
-			 * @param {Object} [option={}]
-			 * @param {{ value: Object }} [option.target={ value: null }]
-			 * @param {Number} [option.tick=1]
-			 * @param {function ()} [option.onGet=function () {}]
-			 * @param {function (Watcher)} [option.onChange=function (watcher) {}]
+			 * Creates an instance of Watcher
+			 * 
+			 * @param {Object} [option={}] An collection of watching options
+			 * @param {{ value: Object }} [option.target={ value: null }] A watched target
+			 * @param {Number} [option.tick=1] A time between one to one
+			 * @param {function ()} [option.onGet=function () {}] A callback, will be called when it'll get
+			 * @param {function (Watcher)} [option.onChange=function (watcher) {}] A callback, will be called when the target will have changed
 			 */
 			constructor (option = { target: { value: null }, tick: 1, onGet: () => {}, onChange: (watcher) => {} }) {
 				this.watcherID = [];
@@ -996,14 +969,18 @@ class DOM {
 			}
 
 			/**
-			 * @param {Number} tick
+			 * Sets a time between one to one
+			 * 
+			 * @param {Number} tick A time between one to one
 			 */
 			setWatchTick (tick) {
 				this.watchTick = tick;
 			}
 
 			/**
-			 * @param {{ value: Object }} target
+			 * Sets a target to watch
+			 * 
+			 * @param {{ value: Object }} target A target to watch
 			 */
 			setTarget (target) {
 				this.target = target;
@@ -1012,8 +989,10 @@ class DOM {
 
 
 			/**
-			 * @param {Watcher} watcher
-			 * @returns {Watcher}
+			 * Adds a watcher to tasks
+			 * 
+			 * @param {Watcher} watcher A watcher
+			 * @returns {Watcher} A provided watcher
 			 */
 			static addWatcher (watcher) {
 				watcher.watcherID[0] = setInterval(() => {
@@ -1037,7 +1016,9 @@ class DOM {
 			}
 
 			/**
-			 * @param {Watcher} watcher
+			 * Removes a watcher from tasks
+			 * 
+			 * @param {Watcher} watcher A watcher
 			 */
 			static removeWatcher (watcher) {
 				clearInterval(watcher.watcherID[0]);
@@ -1048,8 +1029,14 @@ class DOM {
 		}
 	}
 
+	/**
+	 * Randomizer Class
+	 */
 	static get Randomizer () {
 		return class Randomizer {
+			/**
+			 * A collection of generating types
+			 */
 			static get TYPE () {
 				const TYPE = {
 					LEVEL1: Symbol.for("LEVEL1"),	//Only Numbers
@@ -1072,6 +1059,9 @@ class DOM {
 				return TYPE;
 			}
 
+			/**
+			 * A collection of generating characters
+			 */
 			static get CHARMAP () {
 				const CHARMAP = {
 					LEVEL1: "1234567890".split(""),
@@ -1093,12 +1083,17 @@ class DOM {
 
 				return CHARMAP;
 			}
-
+			
+			/**
+			 * RandomizeType Class
+			 */
 			static get RamdomizeType () {
 				return class RandomizeType {
 					/**
-					 * @param {String} [name="Untitled Type"]
-					 * @param {String} [usedChars=""]
+					 * Creates an instance of RandomizeType
+					 * 
+					 * @param {String} [name="Untitled Type"] A name of the randomize type
+					 * @param {String} [usedChars=""] A collection of characters to use
 					 */
 					constructor (name = "Untitled Type", usedChars = "") {
 						this.name = name,
@@ -1112,7 +1107,9 @@ class DOM {
 
 
 			/**
-			 * @param {Symbol} [usedType=DOM.Randomizer.TYPE.LEVEL3]
+			 * Creates an instance of Randomizer
+			 * 
+			 * @param {Symbol} [usedType=DOM.Randomizer.TYPE.LEVEL3] A randomize type
 			 */
 			constructor (usedType = DOM.Randomizer.TYPE.LEVEL3) {
 				this.TYPE = Randomizer.TYPE,
@@ -1122,14 +1119,18 @@ class DOM {
 			}
 			
 			/**
-			 * @param {Symbol} usedType
+			 * Sets a randomize type
+			 * 
+			 * @param {Symbol} usedType A randomize type
 			 */
 			setType (usedType) {
 				!usedType || (this.currentType = this.TYPE[Symbol.keyFor(usedType)]);
 			}
 
 			/**
-			 * @param {Randomizer.RandomizeType} randomizeType
+			 * Adds a randomize type to the randomizer
+			 * 
+			 * @param {Randomizer.RandomizeType} randomizeType A randomize type to add
 			 */
 			addRandomizeType (randomizeType) {
 				if (randomizeType) {
@@ -1141,7 +1142,9 @@ class DOM {
 			}
 
 			/**
-			 * @param {Randomizer.RandomizeType} randomizeType
+			 * Removes a randomize type from the randomizer
+			 * 
+			 * @param {Randomizer.RandomizeType} randomizeType A randomize type to be remove
 			 */
 			removeRandomizeType (randomizeType) {
 				if (randomizeType) {
@@ -1152,6 +1155,9 @@ class DOM {
 				}
 			}
 
+			/**
+			 * Resets current randomize types
+			 */
 			resetRandomizeType () {
 				this.TYPE = DOM.Randomize.TYPE,
 				this.CHARMAP = DOM.Randomize.CHARMAP;
@@ -1160,8 +1166,10 @@ class DOM {
 			}
 			
 			/**
-			 * @param {Number} [strLength=8]
-			 * @returns {String}
+			 * Generates a randomized string
+			 * 
+			 * @param {Number} [strLength=8] A length of a randomized string
+			 * @returns {String} A randomized string
 			 */
 			generate (strLength = 8) {
 				let result = "";
@@ -1179,10 +1187,15 @@ class DOM {
 		}
 	}
 
+	/**
+	 * AudioPlayer Class
+	 */
 	static get AudioPlayer () {
 		return class AudioPlayer extends AudioContext {
 			/**
-			 * @param {String} [url=""]
+			 * Creates an instance of AudioPlayer
+			 * 
+			 * @param {String} [url=""] A media's URL
 			 */
 			constructor (url = "") {
 				super();
@@ -1211,6 +1224,9 @@ class DOM {
 				}
 			}
 
+			/**
+			 * Starts to play a media
+			 */
 			play () {
 				let source = this.createBufferSource();
 					source.buffer = this.buffer;
@@ -1221,11 +1237,15 @@ class DOM {
 		}
 	}
 
+	/**
+	 * ComponentLoader Class
+	 */
 	static get ComponentLoader () {
 		return class ComponentLoader {
 			/**
-			 * ComponentLoaderを生成
-			 * @param {String} [documentUrl=location.href] テンプレートHTMLのURL
+			 * Creates an instance of ComponentLoader
+			 * 
+			 * @param {String} [documentUrl=location.href] A template's URL
 			 */
 			constructor (documentUrl = location.href) {
 				let doc = this.doc = new DOM("HTML");
@@ -1237,10 +1257,10 @@ class DOM {
 			}
 
 			/**
-			 * セレクターからコンポーネントを取得
+			 * Gets a component from a provided selector
 			 * 
-			 * @param {String} [componentSelector=""]
-			 * @returns {HTMLElement}
+			 * @param {String} [componentSelector=""] A selector
+			 * @returns {HTMLElement} A component
 			 */
 			load (componentSelector = "") {
 				let component = this.doc.querySelector(componentSelector);
@@ -1255,22 +1275,7 @@ class DOM {
 	}
 
 
-
-	/*DOM.InvalidSelectorError = (() => {
-		function InvalidSelectorError (message) {
-			this.name = "InvalidSelector";
-			this.message = message || "Syntax of selector is invalid";
-
-			Error.captureStackTrace(this);
-		}; InvalidSelectorError.prototype = SyntaxError.prototype;
-
-		return InvalidSelectorError;
-	})();*/
-
-
-
 	
-	static get apiInfo () { return new DOM.APIInfo("DOM Extender", 3.4) }
 	static get width () { return window.innerWidth }
 	static get height () { return window.innerHeight }
 	static get vw () { return window.innerWidth / 100 }

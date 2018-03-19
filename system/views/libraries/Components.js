@@ -1,5 +1,7 @@
 class Components {
 	static generateThumbnail (articleId = 0, src = "") {
+		src = decodeURIComponent(src);
+
 		return new DOM("Img", {
 			classes: ["tooltipped", "z-depth-1"],
 			attributes: { Src: `${CONFIG.PATH.MEDIA}/${articleId}/${src}` },
@@ -13,6 +15,8 @@ class Components {
 	}
 
 	static generateCommonThumbnail (src = "") {
+		src = decodeURIComponent(src);
+		
 		return new DOM("Img", {
 			classes: ["tooltipped", "z-depth-1"],
 			attributes: { Src: `${CONFIG.PATH.COMMONMEDIA}/${src}` },

@@ -14,7 +14,7 @@
 		<Link Rel = "StyleSheet" Href = "libraries/Materialize/css/materialize.min.css" />
 
 		<Script Src = "config.js"></Script>
-		<Script Src = "libraries/DOM Extender v3.5.js"></Script>
+		<Script Src = "libraries/DOM Extender v4.0.js"></Script>
 		<Script Src = "libraries/Components.js"></Script>
 
 		<Script Src = "main.js" Defer = "Defer"></Script>
@@ -106,7 +106,9 @@
 						</UL>
 
 						<Section ID = "Editor-Content-Medias-InArticle" Class = "input-field">
-							<Form Method = "POST" Action = "/api/media/${id}" Enctype = "multipart/form-data" Target = "uploader">
+							<Form Method = "POST" Action = "/api/media/1" Enctype = "multipart/form-data" Target = "Editor-Content-Medias-InArticle-MediaTarget">
+								<IFrame Name = "Editor-Content-Medias-InArticle-MediaTarget"></IFrame>
+
 								<Div Class = "file-field">
 									<Div Class = "btn">
 										<Span>選択</Span>
@@ -117,7 +119,7 @@
 										<Input Class = "file-path validate" Type = "Text" PlaceHolder = "画像を選択してください" />
 									</Div>
 								</Div>
-	
+								
 								<Button Class = "btn waves-effect waves-light" Type = "Submit">アップロード</Button>
 							</Form>
 
@@ -126,7 +128,9 @@
 						</Section>
 
 						<Section ID = "Editor-Content-Medias-InBlog" Class = "input-field">
-							<Form Method = "POST" Action = "/api/media" Enctype = "multipart/form-data" Target = "uploader">
+							<Form Method = "POST" Action = "/api/media" Enctype = "multipart/form-data" Target = "Editor-Content-Medias-InBlog-MediaTarget">
+								<IFrame Name = "Editor-Content-Medias-InBlog-MediaTarget"></IFrame>
+
 								<Div Class = "file-field">
 									<Div Class = "btn">
 										<Span>選択</Span>

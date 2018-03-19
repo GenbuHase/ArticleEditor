@@ -37,22 +37,23 @@ module.exports = class API {
 	}
 
 	static deleteArticle (id = 0) {
-		fs.unlinkSync(`articles/${id}.json`);
-		if (fs.existsSync(`publishes/${id}`)) Util.removedirSync(`publishes/${id}`);
+		fs.unlinkSync(`${CONFIG.PATH.ARTICLE}/${id}.json`);
+		Util.removedirSync(`${CONFIG.PATH.MEDIA}/${id}`);
+		if (fs.existsSync(`${CONFIG.PATH.PUBLISH}/${id}`)) Util.removedirSync(`${CONFIG.PATH.PUBLISH}/${id}`);
 	}
 
 	static getMedias (id = 0) {
-		if (!fs.existsSync(`medias/${id}`)) fs.mkdirSync(`medias/${id}`);
-		return fs.readdirSync(`medias/${id}`);
+		if (!fs.existsSync(`${CONFIG.PATH.MEDIA}/${id}`)) fs.mkdirSync(`${CONFIG.PATH.MEDIA}/${id}`);
+		return fs.readdirSync(`${CONFIG.PATH.MEDIA}/${id}`);
 	}
 
 	static getCommonMedias () {
-		return fs.readdirSync("medias/common");
+		return fs.readdirSync(CONFIG.PATH.COMMONMEDIA);
 	}
 
 	static uploadMedia (media) {
 		let renamed = `${media.path.split("\\").slice(0, -1).join("/")}/${media.originalname}`;
-		fs.rename(media.path, renamed, err => err);
+		fs.rename(media.path, renamed, res => null);
 
 		return renamed;
 	}

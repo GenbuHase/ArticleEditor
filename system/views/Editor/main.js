@@ -3,9 +3,11 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.getElementById("Editor-Info-Title");
 	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
 	const articleContent = document.getElementById("Editor-Content-Text");
-	
+
+	const articleMediaForm = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Form");
 	const articleMediaPicker = document.getElementById("Editor-Content-Medias-InArticle-MediaPicker");
 	const articleAlbum = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Album");
+	const commonMediaForm = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Form");
 	const commonMediaPicker = document.getElementById("Editor-Content-Medias-InBlog-MediaPicker");
 	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Album");
 
@@ -31,13 +33,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 	articleId.addEventListener("change", event => {
-		switch (event.target.value) {
+		let id = event.target.value;
+
+		switch (id) {
 			default:
+				articleMediaForm.action = `/api/media/${id}`;
 				Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
+
 				break;
 
 			case "None":
+				articleMediaForm.action = `/api/media/`;
 				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
+
 				break;
 
 			case "Add":
@@ -57,6 +65,8 @@ window.addEventListener("DOMContentLoaded", () => {
 						article.selected = true;
 						
 						M.Select.init(articleId);
+
+						articleMediaForm.action = `/api/media/${id}`;
 						Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 					}
 				});
@@ -66,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		DOM.xhr({
 			type: "GET",
-			url: `/api/article/${articleId.value}`,
+			url: `/api/article/${id}`,
 			resType: "json",
 			doesSync: true,
 
@@ -84,20 +94,74 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		DOM.xhr({
 			type: "GET",
-			url: `/api/medias/${articleId.value}`,
+			url: `/api/medias/${id}`,
 			resType: "json",
 			doesSync: true,
 
 			onLoad (event) {
+				while (articleAlbum.children.length != 0) articleAlbum.children[0].remove();
+
 				let medias = event.target.response.medias;
+
+				for (let i = 0; i < medias.length; i++) {
+					let thumb = Components.generateThumbnail(id, medias[i]);
+						M.Tooltip.init(thumb);
+
+					articleAlbum.appendChild(thumb);
+				}
 			}
 		});
+	});
+
+	articleMediaForm.addEventListener("submit", event => {
+		let id = articleId.value,
+			medias = articleMediaPicker.files;
+
+		for (let i = 0; i < medias.length; i++) {
+			let path = medias[i].name;
+
+			if (!articleAlbum.querySelector(`Img[Data-Tooltip="${path}"]`)) {
+				(function looper () {
+					if (DOM.xhr({ type: "GET", url: `${CONFIG.PATH.MEDIA}/${id}/${path}` }).status == 404) {
+						setTimeout(looper, 10);
+						return;
+					}
+
+					let thumbnail = Components.generateThumbnail(id, path)
+						M.Tooltip.init(thumbnail);
+
+					articleAlbum.appendChild(thumbnail);
+				})();
+			}
+		}
+	});
+
+	commonMediaForm.addEventListener("submit", event => {
+		let medias = commonMediaPicker.files;
+
+		for (let i = 0; i < medias.length; i++) {
+			let path = medias[i].name;
+
+			if (!commonAlbum.querySelector(`Img[Data-Tooltip="${path}"]`)) {
+				(function looper () {
+					if (DOM.xhr({ type: "GET", url: `${CONFIG.PATH.COMMONMEDIA}/${path}` }).status == 404) {
+						setTimeout(looper, 10);
+						return;
+					}
+
+					let thumbnail = Components.generateCommonThumbnail(path)
+						M.Tooltip.init(thumbnail);
+
+					commonAlbum.appendChild(thumbnail);
+				})();
+			}
+		}
 	});
 
 	saveBtn.addEventListener("click", () => {
 		DOM.xhr({
 			type: "POST",
-			url: "/api/draft",
+			url: `/api/article/${articleId.value}`,
 			resType: "json",
 			doesSync: true,
 
@@ -106,8 +170,6 @@ window.addEventListener("DOMContentLoaded", () => {
 			},
 
 			data: JSON.stringify({
-				id: articleId.value,
-
 				title: articleTitle.value,
 				createdAt: articleCreatedAt.value,
 				content: articleContent.value
@@ -122,17 +184,9 @@ window.addEventListener("DOMContentLoaded", () => {
 	publishBtn.addEventListener("click", () => {
 		DOM.xhr({
 			type: "POST",
-			url: "/api/publish",
+			url: `/api/publish/${articleId.value}`,
 			resType: "json",
 			doesSync: true,
-
-			headers: {
-				"Content-Type": "application/json"
-			},
-
-			data: JSON.stringify({
-				id: articleId.value
-			}),
 
 			onLoad (event) {
 				M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
@@ -199,6 +253,8 @@ window.addEventListener("DOMContentLoaded", () => {
 		});
 	});
 
+
+
 	DOM.xhr({
 		type: "GET",
 		url: "/api/articles",
@@ -226,10 +282,11 @@ window.addEventListener("DOMContentLoaded", () => {
 			let medias = event.target.response.medias;
 
 			for (let i = 0; i < medias.length; i++) {
-				commonAlbum.appendChild(Components.generateCommonThumbnail(medias[i]));
-			}
+				let thumbnail = Components.generateCommonThumbnail(medias[i]);
+					M.Tooltip.init(thumbnail);
 
-			document.querySelectorAll(".tooltipped").forEach(tooltip => M.Tooltip.init(tooltip));
+				commonAlbum.appendChild(thumbnail);
+			}
 		}
 	});
 });
