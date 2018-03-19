@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 	articleId.addEventListener("change", event => {
-		let id = event.target.value;
+		let id = articleId.value;
 
 		switch (id) {
 			default:
@@ -43,9 +43,10 @@ window.addEventListener("DOMContentLoaded", () => {
 				break;
 
 			case "None":
-				articleMediaForm.action = `/api/media/`;
+				articleMediaForm.action = "";
 				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
 
+				return;
 				break;
 
 			case "Add":
@@ -58,7 +59,8 @@ window.addEventListener("DOMContentLoaded", () => {
 					},
 
 					onLoad (event) {
-						let id = JSON.parse(event.target.response).id;
+						id = JSON.parse(event.target.response).id;
+						
 						let article = new Option(id, id);
 						
 						articleId.M_Select.$selectOptions[1].appendChild(article);
@@ -68,9 +70,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
 						articleMediaForm.action = `/api/media/${id}`;
 						Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
+
+						M.toast({ html: `記事(ID：${id})が新規作成されました` });
 					}
 				});
-
+				
 				break;
 		}
 
@@ -209,7 +213,8 @@ window.addEventListener("DOMContentLoaded", () => {
 				
 				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
 				
-				articleTitle.value = articleContent.value = "",
+				articleTitle.value = "",
+				articleContent.value = "",
 				articleCreatedAt.value = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
 
 				M.Select.init(articleId),

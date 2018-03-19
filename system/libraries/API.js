@@ -3,12 +3,12 @@ const Util = require("./Util");
 const CONFIG = require("./../config");
 
 module.exports = class API {
-	static getArticles () {
-		return fs.readdirSync(CONFIG.PATH.ARTICLE);
-	}
-
 	static getArticle (id = 0) {
 		return fs.readFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, "UTF-8");
+	}
+
+	static getArticles () {
+		return fs.readdirSync(CONFIG.PATH.ARTICLE);
 	}
 
 	static getNextArticleId () {
@@ -23,6 +23,8 @@ module.exports = class API {
 			createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
 			content: ""
 		}, null, "\t"));
+
+		Util.mkdirsSync(`${CONFIG.PATH.MEDIA}/${id}`);
 	}
 
 	static saveArticle (id = 0, data = {}) {
