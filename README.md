@@ -1,47 +1,83 @@
 # Article Editor
 
-[![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg?branch=AE-1.0.1)](https://travis-ci.org/GenbuHase/ArticleEditor)
+[![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg)](https://travis-ci.org/GenbuHase/ArticleEditor)
 
-ブログ形式サイトのための記事編集ツール
+A tool for bloggers without any blog services
 
-## 概要 | Description
-このツールを使うと、簡単にブログ形式サイトの記事を執筆することが出来ます。
 
-## 主な機能 | Features
-* テンプレートHTMLを利用した記事生成
-* 記事のID管理
-* 軽快な動作
+## Other Languages
+* [日本語 | Japanese](/README[Japanese].md)
 
-## 動作環境・開発環境 | Requirement
+
+## Description
+You could create any articles easily if you used "Article Editor".
+
+
+## Features
+* Generates any articles with a template
+* Manages a list of article ids
+* Runs Smoothly
+
+
+## Requirement
 * [Node.js](https://nodejs.org/)
 * [express](https://npmjs.com/package/express)
 * [method-override](https://npmjs.com/package/method-override)
+* [multer](https://npmjs.com/package/multer)
 
-## 使用方法 | How to Use
-初回実行時、必要なディレクトリが生成されます。
 
-1.	`template/index.html`(以下テンプレートHTML)を編集します。<Br />
-	テンプレートHTML内では、以下の特殊変数が利用できます。
+## How to Use
+Some folders will be generated for the first time.
+1.	Edit `template/index.html`(template).<Br />
+	You can provide special variables in it.
 
-	* `${title}` ... 記事タイトル
-	* `${createdAt}` ... 記事作成日
-	* `${content}` ... 記事内容
-  
-2.	Article Editorを起動するために`run.cmd`か`npm start`を実行します。
-3.	起動後、[http://localhost:8005](http://localhost:8005)にアクセスします。
-4.	ページの指示に従って執筆しましょう！
+	* `${title}` ... Article's title
+	* `${createdAt}` ... Article's date
+	* `${content}` ... Article's content
+	
+2.	Execute `npm start` to run this tool.
+3.	View [http://localhost:8005](http://localhost:8005) after running.
+4.	Create your articles following instructions!
 
-## インストール方法 | Installation
-以下のコマンドを実行してください。
+
+## Installation
+Execute these commands.
 
 ```
 $ git clone https://github.com/GenbuHase/ArticleEditor.git
 $ cd ArticleEditor
-$ npm start
+$ npm install
 ```
 
-## 作者 | Author
-* [Genbu Hase](https://github.com/GenbuHase)
 
-## ライセンス | License
+## Config
+`system/config.js` is editable.
+```JavaScript
+{
+	PORT: A port this will use(Number),
+
+	PATH: {
+		ARTICLE: A directory, contains a collection of article(String),
+		PUBLISH: A directory, contains generated html of article(String),
+		MEDIA: A directory, contains medias that each articles has(String),
+		COMMONMEDIA: A directory, contains common medias(String),
+		TEMPLATE: A directory, contains a template(String)
+	},
+
+	VARIABLES: A collection of special variables(Array),
+
+	onCreate: A callback, will be called when an article will be created(Function),
+	onDelete: A callback, will be called when any articles will be deleted(Function),
+	onSave: A callback, will be called when any articles will be drafted(Function),
+	onPublish: A callback, will be called when any pages will be generated(Function),
+	onUpload: A callback, will be called when any medias will be uploaded(Function)
+}
+```
+
+
+## Author
+[Genbu Hase](https://github.com/GenbuHase)
+
+
+## License
 [MIT License](https://github.com/GenbuHase/ArticleEditor/blob/master/LICENSE)

@@ -1,0 +1,58 @@
+Body {
+	Margin: 0;
+}
+
+Main {
+	Padding: 1em;
+}
+
+
+
+#Editor, #Toolbar {
+	Padding: 1em;
+}
+
+#Editor-Info, #Editor-Content {
+	Display: Flex;
+	Flex-Direction: Row;
+	Justify-Content: Space-Between;
+	Align-Items: Flex-Start;
+}
+
+#Editor-Info > Div {
+	Width: 15%;
+}
+
+#Editor-Info > Div:nth-Child(2) {
+	Width: 60%;
+}
+
+#Editor-Content > *:First-Child {
+	Flex: 1;
+}
+
+#Editor-Content-Medias {
+	Width: 20%;
+	Margin-Left: 1em;
+}
+
+#Editor-Content-Medias > Section > Form IFrame {
+	Display: None;
+}
+
+#Editor-Content-Medias > Section > Form Button[Type="Submit"] {
+	Width: 100%;
+}
+
+#Editor-Content-Medias > Section > Album {
+	Display: Flex !important;
+	Flex-Direction: Row;
+	Justify-Content: Space-Around;
+	Align-Items: Center;
+	Flex-Wrap: Wrap;
+}
+
+#Editor-Content-Medias > Section > Album Img {
+	Width: 40%;
+	Margin-Bottom: 1em;
+}

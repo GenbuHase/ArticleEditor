@@ -1,0 +1,163 @@
+<!DocType HTML>
+
+<HTML>
+	<Head>
+		<Meta Charset = "UTF-8" />
+		<Meta Name = "Viewport" Content = "Width=Device-Width, Initial-Scale=1" />
+		<Link Rel = "Shortcut Icon" Href = "libraries/favicon.ico" />
+		<Title>Article Editor</Title>
+
+		<Link Rel = "StyleSheet" Href = "libraries/Material Icons/material-icons.css" />
+		<Link Rel = "StyleSheet" Href = "libraries/Material Icons Extended/material-icons-extended.css" />
+
+		<Script Src = "libraries/Materialize/js/materialize.min.js"></Script>
+		<Link Rel = "StyleSheet" Href = "libraries/Materialize/css/materialize.min.css" />
+
+		<Script Src = "config.js"></Script>
+		<Script Src = "libraries/DOM Extender v4.0.js"></Script>
+		<Script Src = "libraries/Components.js"></Script>
+
+		<Script Src = "main.js" Defer = "Defer"></Script>
+		<Link Rel = "stylesheet" Href = "main.css" />
+	</Head>
+	
+	<Body>
+		<Nav>
+			<Span Class = "brand-logo center">Article Editor</Span>
+		</Nav>
+
+		<Main>
+			<Section>
+				このツールは、ブログ形式サイトのための記事編集ツールです。
+			</Section>
+
+			<UL Class = "tabs">
+				<Li Class = "tab">
+					<A Class = "active" Href = "#Editor">編集画面</A>
+				</Li>
+
+				<Li Class = "tab">
+					<A Href = "#Toolbar">その他のツール</A>
+				</Li>
+			</UL>
+
+			<Section ID = "Editor">
+				<Section ID = "Editor-Info">
+					<Div Class = "input-field">
+						<Select ID = "Editor-Info-ArticleID">
+							<Optgroup Label = "----------">
+								<Option Value = "None" Disabled = "Disabled" Selected = "Selected">----------</Option>
+								<Option Value = "Add">記事追加</Option>
+							</Optgroup>
+
+							<Optgroup Label = "既存の記事">
+							</Optgroup>
+						</Select>
+
+						<Label>対象記事</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<Input ID = "Editor-Info-Title" Class = "validate" Type = "Text" Required = "Required" />
+						<Label For = "Editor-Info-Title">記事タイトル</Label>
+					</Div>
+
+					<Div Class = "input-field">
+						<I Class = "prefix material-icons">date_range</I>
+						<Input ID = "Editor-Info-CreatedAt" Class = "datepicker" Type = "Text" />
+						<Label For = "Editor-Info-CreatedAt">投稿日時</Label>
+					</Div>
+				</Section>
+
+				<Section ID = "Editor-Content">
+					<Section>
+						<Div Class = "input-field">
+							<Textarea ID = "Editor-Content-Text" Class = "materialize-textarea"></Textarea>
+							<Label For = "Editor-Content-Text">記事内容</Label>
+						</Div>
+
+						<Section ID = "Editor-Btns">
+							<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
+								<I Class = "material-icons left">save</I>
+								下書き保存
+							</A>
+
+							<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">
+								<I Class = "material-icons left">publish</I>
+								記事ページ生成
+							</A>
+
+							<A ID = "Editor-Btns-Delete" Class = "btn disabled waves-effect waves-light red">
+								<I Class = "material-icons left">remove</I>
+								記事削除
+							</A>
+						</Section>
+					</Section>
+
+					<Div ID = "Editor-Content-Medias">
+						<UL Class = "tabs tabs-fixed-width">
+							<Li Class = "tab">
+								<A Class = "active" Href = "#Editor-Content-Medias-InArticle">記事内</A>
+							</Li>
+			
+							<Li Class = "tab">
+								<A Href = "#Editor-Content-Medias-InBlog">ブログ内</A>
+							</Li>
+						</UL>
+
+						<Section ID = "Editor-Content-Medias-InArticle" Class = "input-field">
+							<Form Method = "POST" Action = "/api/media/1" Enctype = "multipart/form-data" Target = "Editor-Content-Medias-InArticle-MediaTarget">
+								<IFrame Name = "Editor-Content-Medias-InArticle-MediaTarget"></IFrame>
+
+								<Div Class = "file-field">
+									<Div Class = "btn">
+										<Span>選択</Span>
+										<Input Name = "medias" ID = "Editor-Content-Medias-InArticle-MediaPicker" Type = "File" Multiple = "Multiple" />
+									</Div>
+	
+									<Div Class = "file-path-wrapper">
+										<Input Class = "file-path validate" Type = "Text" PlaceHolder = "画像を選択してください" />
+									</Div>
+								</Div>
+								
+								<Button Class = "btn waves-effect waves-light" Type = "Submit">アップロード</Button>
+							</Form>
+
+							<Album Class = "input-field">
+							</Album>
+						</Section>
+
+						<Section ID = "Editor-Content-Medias-InBlog" Class = "input-field">
+							<Form Method = "POST" Action = "/api/media" Enctype = "multipart/form-data" Target = "Editor-Content-Medias-InBlog-MediaTarget">
+								<IFrame Name = "Editor-Content-Medias-InBlog-MediaTarget"></IFrame>
+
+								<Div Class = "file-field">
+									<Div Class = "btn">
+										<Span>選択</Span>
+										<Input Name = "medias" ID = "Editor-Content-Medias-InBlog-MediaPicker" Type = "File" Multiple = "Multiple" />
+									</Div>
+	
+									<Div Class = "file-path-wrapper">
+										<Input Class = "file-path validate" Type = "Text" PlaceHolder = "画像を選択してください" />
+									</Div>
+								</Div>
+	
+								<Button Class = "btn waves-effect waves-light" Type = "Submit">アップロード</Button>
+							</Form>
+
+							<Album Class = "input-field">
+							</Album>
+						</Section>
+					</Div>
+				</Section>
+			</Section>
+
+			<Section ID = "Toolbar">
+				<A ID = "Toolbar-PublishAll" Class = "btn waves-effect waves-light">
+					<I Class = "material-icons left">publish</I>
+					全記事ページ生成
+				</A>
+			</Section>
+		</Main>
+	</Body>
+</HTML>
