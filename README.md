@@ -1,6 +1,6 @@
 # Article Editor
 
-[![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg?branch=AE-1.1.0)](https://travis-ci.org/GenbuHase/ArticleEditor)
+[![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg)](https://travis-ci.org/GenbuHase/ArticleEditor)
 
 A tool for bloggers without any blog services
 
