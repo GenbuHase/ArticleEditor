@@ -35,7 +35,7 @@ let app = express();
 				content: API.getArticle(id)
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -62,7 +62,7 @@ let app = express();
 				path
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -84,7 +84,7 @@ let app = express();
 				id
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -101,7 +101,7 @@ let app = express();
 				articles: API.getArticles()
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -123,7 +123,7 @@ let app = express();
 				id
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -154,7 +154,7 @@ let app = express();
 				content
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -179,7 +179,7 @@ let app = express();
 				mediaPath
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -192,7 +192,7 @@ let app = express();
 	app.post("/api/media/:id", (req, res) => {
 		multer({ dest: `./${CONFIG.PATH.MEDIA}/${req.params.id}/` }).array("medias")(req, res, err => {
 			if (err) {
-				res.end(JSON.stringify({
+				res.status(500).end(JSON.stringify({
 					status: "failure",
 					error: err
 				}));
@@ -211,7 +211,7 @@ let app = express();
 						mediaPath
 					}));
 				} catch (error) {
-					res.end(JSON.stringify({
+					res.status(500).end(JSON.stringify({
 						status: "failure",
 						error
 					}));
@@ -230,7 +230,7 @@ let app = express();
 				medias: API.getCommonMedias()
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
@@ -249,7 +249,7 @@ let app = express();
 				medias: API.getMedias(id)
 			}));
 		} catch (error) {
-			res.end(JSON.stringify({
+			res.status(500).end(JSON.stringify({
 				status: "failure",
 				error
 			}));
