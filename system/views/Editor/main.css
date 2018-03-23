@@ -31,6 +31,12 @@ Main {
 	Flex: 1;
 }
 
+#Editor-Content-Preview {
+	Width: 100%;
+
+	Border: Thin Solid RGBA(0, 0, 0, 0.5);
+}
+
 #Editor-Content-Medias {
 	Width: 20%;
 	Margin-Left: 1em;

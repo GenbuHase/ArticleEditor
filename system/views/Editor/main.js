@@ -3,6 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.getElementById("Editor-Info-Title");
 	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
 	const articleContent = document.getElementById("Editor-Content-Text");
+	const articlePreview = document.getElementById("Editor-Content-Preview");
 
 	const articleMediaForm = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Form");
 	const articleMediaPicker = document.getElementById("Editor-Content-Medias-InArticle-MediaPicker");
@@ -38,9 +39,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		switch (id) {
 			default:
+				articlePreview.src = `/api/preview/${id}`,
 				articleMediaForm.action = `/api/media/${id}`;
-				Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 
+				Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 				break;
 
 			case "None":

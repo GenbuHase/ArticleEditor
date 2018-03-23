@@ -138,21 +138,34 @@ let app = express();
 			path = `${CONFIG.PATH.PUBLISH}/${id}`;
 
 		try {
-			let article = JSON.parse(API.getArticle(req.body.id)),
-				content = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8");
+			let content = API.getPreview(id);
 
-			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
-
-			API.publishArticle(id, content);
+			API.publishArticle(id);
 			CONFIG.onPublish(self, id, path, content);
 
 			res.end(JSON.stringify({
 				status: "success",
 
-				id: req.body.id,
+				id,
 				path,
 				content
 			}));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Returns an article's preview
+	 */
+	app.get("/api/preview/:id", (req, res) => {
+		let id = req.params.id;
+
+		try {
+			res.end(API.getPreview(id));
 		} catch (error) {
 			res.status(500).end(JSON.stringify({
 				status: "failure",
@@ -256,7 +269,13 @@ let app = express();
 		}
 	});
 
-	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`));
+	app.get(/.*/, (req, res) => {
+		if (req.header("referer").match("/api/preview/")) {
+			res.sendFile(`${__dirname}/${CONFIG.PATH.TEMPLATE}/${decodeURIComponent(req.url)}`);
+		} else {
+			res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`);
+		}
+	});
 
 	app.listen(CONFIG.PORT, () => {
 		if (!fs.existsSync(CONFIG.PATH.ARTICLE)) fs.mkdir(CONFIG.PATH.ARTICLE);

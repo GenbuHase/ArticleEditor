@@ -31,11 +31,13 @@ module.exports = class API {
 		fs.writeFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, JSON.stringify(data, null, "\t"));
 	}
 
-	static publishArticle (id = 0, content = "") {
-		let publishPath = `${CONFIG.PATH.PUBLISH}/${id}`;
+	static publishArticle (id = 0) {
+		let publishPath = `${CONFIG.PATH.PUBLISH}/${id}`,
+			content = this.getPreview(id);
 
 		if (fs.existsSync(publishPath)) Util.removedirSync(publishPath);
 		Util.writeFileWithDirSync(`${publishPath}/index.html`, content);
+		Util.copydirSync(`${CONFIG.PATH.MEDIA}/${id}`, `${publishPath}`);
 	}
 
 	static deleteArticle (id = 0) {
@@ -43,6 +45,15 @@ module.exports = class API {
 		Util.removedirSync(`${CONFIG.PATH.MEDIA}/${id}`);
 
 		if (fs.existsSync(`${CONFIG.PATH.PUBLISH}/${id}`)) Util.removedirSync(`${CONFIG.PATH.PUBLISH}/${id}`);
+	}
+
+	static getPreview (id = 0) {
+		let template = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8"),
+			article = JSON.parse(this.getArticle(id));
+
+		CONFIG.VARIABLES.forEach(variable => template = template.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]))
+
+		return template;
 	}
 
 	static getMedias (id = 0) {
