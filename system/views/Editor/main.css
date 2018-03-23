@@ -56,3 +56,28 @@ Main {
 	Width: 40%;
 	Margin-Bottom: 1em;
 }
+
+#Editor-Content-Medias-Foreground.isDropping {
+	Position: Fixed;
+	Top: 0;
+	Left: 0;
+
+	Display: Flex;
+	Justify-Content: Center;
+	Align-Items: Center;
+	Width: 100%;
+	Height: 100%;
+	Background: RGBA(0, 0, 0, 0.25);
+
+	Color: White;
+	Text-Shadow: 0 0 0.5em Black;
+
+	Pointer-Events: None;
+	Z-Index: 100;
+}
+
+#Editor-Content-Medias-Foreground.isDropping::Before {
+	Content: "メディアをドロップしてください";
+
+	Font-Size: Large;
+}

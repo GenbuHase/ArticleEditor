@@ -10,6 +10,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	const commonMediaForm = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Form");
 	const commonMediaPicker = document.getElementById("Editor-Content-Medias-InBlog-MediaPicker");
 	const commonAlbum = document.getElementById("Editor-Content-Medias-InBlog").querySelector("Album");
+	const mediaPickerForeground = document.getElementById("Editor-Content-Medias-Foreground");
 
 	const btns = document.getElementById("Editor-Btns");
 	const saveBtn = document.getElementById("Editor-Btns-Save");
@@ -62,10 +63,9 @@ window.addEventListener("DOMContentLoaded", () => {
 						id = JSON.parse(event.target.response).id;
 						
 						let article = new Option(id, id);
-						
+							article.selected = true;
+
 						articleId.M_Select.$selectOptions[1].appendChild(article);
-						article.selected = true;
-						
 						M.Select.init(articleId);
 
 						articleMediaForm.action = `/api/media/${id}`;
@@ -117,6 +117,27 @@ window.addEventListener("DOMContentLoaded", () => {
 		});
 	});
 
+	[articleMediaPicker, commonMediaPicker].forEach(picker => {
+		picker.addEventListener("dragover", () => {
+			mediaPickerForeground.classList.add("isDropping");
+		});
+
+		picker.addEventListener("dragleave", () => {
+			mediaPickerForeground.classList.remove("isDropping");
+		});
+
+		picker.addEventListener("drop", () => {
+			mediaPickerForeground.classList.remove("isDropping");
+		})
+	});
+
+	articleMediaPicker.addEventListener("drop", event => {
+		event.preventDefault();
+		articleMediaPicker.files = event.dataTransfer.files;
+
+		articleMediaForm.submit();
+	});
+
 	articleMediaForm.addEventListener("submit", event => {
 		let id = articleId.value,
 			medias = articleMediaPicker.files;
@@ -138,6 +159,11 @@ window.addEventListener("DOMContentLoaded", () => {
 				})();
 			}
 		}
+	});
+
+	commonMediaPicker.addEventListener("drop", event => {
+		event.preventDefault();
+		commonMediaPicker.files = event.dataTransfer.files;
 	});
 
 	commonMediaForm.addEventListener("submit", event => {
