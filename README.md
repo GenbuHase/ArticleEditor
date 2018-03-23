@@ -21,9 +21,6 @@ You could create any articles easily if you used "Article Editor".
 
 ## Requirement
 * [Node.js](https://nodejs.org/)
-* [express](https://npmjs.com/package/express)
-* [method-override](https://npmjs.com/package/method-override)
-* [multer](https://npmjs.com/package/multer)
 
 
 ## How to Use

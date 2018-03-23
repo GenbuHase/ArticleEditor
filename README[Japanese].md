@@ -21,9 +21,6 @@
 
 ## 動作環境・開発環境 | Requirement
 * [Node.js](https://nodejs.org/)
-* [express](https://npmjs.com/package/express)
-* [method-override](https://npmjs.com/package/method-override)
-* [multer](https://npmjs.com/package/multer)
 
 
 ## 使用方法 | How to Use
