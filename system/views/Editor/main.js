@@ -15,6 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	const btns = document.getElementById("Editor-Btns");
 	const saveBtn = document.getElementById("Editor-Btns-Save");
+	const previewBtn = document.getElementById("Editor-Btns-Preview");
 	const publishBtn = document.getElementById("Editor-Btns-Publish");
 	const deleteBtn = document.getElementById("Editor-Btns-Delete");
 	const publishAllBtn = document.getElementById("Toolbar-PublishAll");
@@ -45,13 +46,6 @@ window.addEventListener("DOMContentLoaded", () => {
 				Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 				break;
 
-			case "None":
-				articleMediaForm.action = "";
-				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
-
-				return;
-				break;
-
 			case "Add":
 				DOM.xhr({
 					type: "POST",
@@ -70,6 +64,7 @@ window.addEventListener("DOMContentLoaded", () => {
 						articleId.M_Select.$selectOptions[1].appendChild(article);
 						M.Select.init(articleId);
 
+						articlePreview.src = `/api/preview/${id}`,
 						articleMediaForm.action = `/api/media/${id}`;
 						Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 
@@ -190,6 +185,8 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
+
+
 	saveBtn.addEventListener("click", () => {
 		DOM.xhr({
 			type: "POST",
@@ -211,6 +208,10 @@ window.addEventListener("DOMContentLoaded", () => {
 				M.toast({ html: `記事(ID：${event.target.response.id})が保存されました` });
 			}
 		});
+	});
+
+	previewBtn.addEventListener("click", () => {
+		articlePreview.src = `/api/preview?title=${articleTitle.value}&createdAt=${articleCreatedAt.value}&content=${articleContent.value}`;
 	});
 
 	publishBtn.addEventListener("click", () => {
@@ -239,6 +240,10 @@ window.addEventListener("DOMContentLoaded", () => {
 				articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${id}"]`).remove(),
 				articleId.M_Select.$selectOptions[0].querySelector('Option[Value="None"]').selected = true;
 				
+				articlePreview.src = "",
+				articleMediaForm.action = "";
+				while (articleAlbum.children.length != 0) articleAlbum.children[0].remove();
+
 				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
 				
 				articleTitle.value = "",

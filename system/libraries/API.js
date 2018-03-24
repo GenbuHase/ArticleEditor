@@ -56,6 +56,13 @@ module.exports = class API {
 		return template;
 	}
 
+	static getPreviewWithData (articleData = {}) {
+		let template = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8");
+			CONFIG.VARIABLES.forEach(variable => template = template.replace(new RegExp(`\\\${${variable}}`, "g"), articleData[variable]))
+
+		return template;
+	}
+
 	static getMedias (id = 0) {
 		if (!fs.existsSync(`${CONFIG.PATH.MEDIA}/${id}`)) fs.mkdirSync(`${CONFIG.PATH.MEDIA}/${id}`);
 		return fs.readdirSync(`${CONFIG.PATH.MEDIA}/${id}`).filter(file => file != "Thumbs.db");

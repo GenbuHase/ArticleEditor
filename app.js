@@ -20,9 +20,23 @@ let app = express();
 	app.use("", express.static(`${__dirname}/system/views/Editor`));
 	app.use("/config.js", express.static(`${__dirname}/system/config.js`));
 	app.use("/libraries", express.static(`${__dirname}/system/views/libraries`));
+	app.use(express.static(`${__dirname}/${CONFIG.PATH.TEMPLATE}`));
 
 	/**
 	 * Returns the article's infomation
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... An article's id
+	 *   content ... An article's content
+	 * }
 	 */
 	app.get("/api/article/:id", (req, res) => {
 		let id = req.params.id;
@@ -44,6 +58,26 @@ let app = express();
 
 	/**
 	 * Saves the article
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * <Payload>
+	 * {
+	 *   title ... An article's title
+	 *   createdAt ... A date of an article created
+	 *   content ... An article's content
+	 * }
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... An article's id
+	 *   path ... An article's path
+	 * }
 	 */
 	app.post("/api/article/:id", (req, res) => {
 		let id = req.params.id;
@@ -71,6 +105,17 @@ let app = express();
 
 	/**
 	 * Deletes the article
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   id ... An article's id
+	 * }
 	 */
 	app.delete("/api/article/:id", (req, res) => {
 		let id = req.params.id;
@@ -93,6 +138,12 @@ let app = express();
 
 	/**
 	 * Returns a list of articles
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   articles ... A collection of articles
+	 * }
 	 */
 	app.get("/api/articles", (req, res) => {
 		try {
@@ -110,6 +161,12 @@ let app = express();
 
 	/**
 	 * Creates new files with a unused id
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   id ... A new article's id
+	 * }
 	 */
 	app.post("/api/new", (req, res) => {
 		let id = API.getNextArticleId();
@@ -132,6 +189,20 @@ let app = express();
 
 	/**
 	 * Generates the article's page
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... A generated page's id
+	 *   path ... A generated page's path
+	 *   content ... A generated page's content
+	 * }
 	 */
 	app.post("/api/publish/:id", (req, res) => {
 		let id = req.params.id,
@@ -159,7 +230,41 @@ let app = express();
 	});
 
 	/**
+	 * Returns a preview with provided data
+	 * 
+	 * <Query Params>
+	 * title ... An article's title
+	 * createdAt ... A date of an article created
+	 * content ... An article's content
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * A preview generated with provided data
+	 */
+	app.get("/api/preview", (req, res) => {
+		let articleData = JSON.parse(req.query);
+
+		try {
+			res.end(API.getPreviewWithData(articleData));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
 	 * Returns an article's preview
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * An article's preview
 	 */
 	app.get("/api/preview/:id", (req, res) => {
 		let id = req.params.id;
@@ -176,15 +281,26 @@ let app = express();
 
 	/**
 	 * Uploads selected medias to common directory
+	 * 
+	 * <Payload>
+	 * A multipart data
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   mediaPath ... A collection of medias' path
+	 * }
 	 */
 	app.post("/api/media", CommonUpload.array("medias"), (req, res) => {
 		let medias = req.files,
-			mediaPath = medias.length > 1 ? [] : "";
+			mediaPath = [];
 
 		try {
 			for (let i = 0; i < medias.length; i++) {
 				let fixedPath = API.uploadMedia(medias[i]);
-				Array.isArray(mediaPath) ? mediaPath.push(fixedPath) : mediaPath = fixedPath;
+				mediaPath.push(fixedPath);
 			}
 
 			res.end(JSON.stringify({
@@ -201,6 +317,20 @@ let app = express();
 
 	/**
 	 * Uploads selected medias to article's directory
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * <Payload>
+	 * A multipart data
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   mediaPath ... A collection of medias' path
+	 * }
 	 */
 	app.post("/api/media/:id", (req, res) => {
 		multer({ dest: `./${CONFIG.PATH.MEDIA}/${req.params.id}/` }).array("medias")(req, res, err => {
@@ -211,12 +341,12 @@ let app = express();
 				}));
 			} else {
 				let medias = req.files,
-					mediaPath = medias.length > 1 ? [] : "";
+					mediaPath = [];
 
 				try {
 					for (let i = 0; i < medias.length; i++) {
 						let fixedPath = API.uploadMedia(medias[i]);
-						Array.isArray(mediaPath) ? mediaPath.push(fixedPath) : mediaPath = fixedPath;
+						mediaPath.push(fixedPath);
 					}
 
 					res.end(JSON.stringify({
@@ -235,6 +365,12 @@ let app = express();
 
 	/**
 	 * Gets a list of common medias
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   medias ... A collection of common medias
+	 * }
 	 */
 	app.get("/api/medias", (req, res) => {
 		try {
@@ -252,6 +388,17 @@ let app = express();
 
 	/**
 	 * Gets a list of article's medias
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   medias ... A collection of article's medias
+	 * }
 	 */
 	app.get("/api/medias/:id", (req, res) => {
 		let id = req.params.id;
@@ -270,11 +417,7 @@ let app = express();
 	});
 
 	app.get(/.*/, (req, res) => {
-		if (req.header("referer").match("/api/preview/")) {
-			res.sendFile(`${__dirname}/${CONFIG.PATH.TEMPLATE}/${decodeURIComponent(req.url)}`);
-		} else {
-			res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`);
-		}
+		res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`);
 	});
 
 	app.listen(CONFIG.PORT, () => {
