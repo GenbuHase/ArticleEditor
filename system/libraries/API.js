@@ -1,6 +1,7 @@
 const fs = require("fs");
-const Util = require("./Util");
 const CONFIG = require("./../config");
+const Util = require("./Util");
+const MagicFormatter = require("./MagicFormatter");
 
 module.exports = class API {
 	static getArticle (id = 0) {
@@ -51,7 +52,8 @@ module.exports = class API {
 		let template = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8"),
 			article = JSON.parse(this.getArticle(id));
 
-		CONFIG.VARIABLES.forEach(variable => template = template.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]))
+		CONFIG.VARIABLES.forEach(variable => template = template.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
+		template = new MagicFormatter(id, template).formatted;
 
 		return template;
 	}
