@@ -14,12 +14,6 @@ module.exports = {
 		TEMPLATE: "template"
 	},
 
-	VARIABLES: [
-		"title",
-		"createdAt",
-		"content"
-	],
-
 	onCreate(self, id = 0) {},
 	onDelete (self, id = 0) {},
 	onSave (self, id = 0, path = "", article = {}) {},

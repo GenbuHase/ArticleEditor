@@ -61,8 +61,6 @@ $ npm install
 		TEMPLATE: テンプレートHTML格納ディレクトリ(String)
 	},
 
-	VARIABLES: 特殊変数名(Array),
-
 	onCreate: 新規作成時に呼ばれるコールバック関数(Function),
 	onDelete: 記事削除時に呼ばれるコールバック関数(Function),
 	onSave: 記事保存時に呼ばれるコールバック関数(Function),

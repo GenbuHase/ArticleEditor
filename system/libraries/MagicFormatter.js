@@ -6,23 +6,29 @@ module.exports = class MagicFormatter {
 		this.content = content;
 	}
 
-	get formatted () {
-		this.commonImage(),
-		this.articleImage(),
-		this.anchor();
+	get forPreview () {
+		let formatted = this.commonImage.articleImage.anchor;
 
+		return formatted.content;
+	}
+
+	get forPublish () {
 		return this.content;
 	}
 
-	commonImage () {
-		this.content = this.content.replace(/!\^\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.COMMONMEDIA}/$2" Alt = "$1" />`);
+
+	//[:アンカー文字列](:リンク先URL)
+	get anchor () {
+		return new MagicFormatter(this.id, this.content.replace(/\[(.*)\]\((.+)\)/g, '<A Href = "$2">$1</A>'));
 	}
 
-	articleImage () {
-		this.content = this.content.replace(/!\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.MEDIA}/${this.id}/$2" Alt = "$1" />`);
+	//![:Alt属性](:画像URL)
+	get articleImage () {
+		return new MagicFormatter(this.id, this.content.replace(/!\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.MEDIA}/${this.id}/$2" Alt = "$1" />`));
 	}
 
-	anchor () {
-		this.content = this.content.replace(/\[(.*)\]\((.+)\)/g, '<A Href = "$2">$1</A>');
+	//!^[:Alt属性](:画像URL)
+	get commonImage () {
+		return new MagicFormatter(this.id, this.content.replace(/!\^\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.COMMONMEDIA}/$2" Alt = "$1" />`));
 	}
 }

@@ -61,8 +61,6 @@ $ npm install
 		TEMPLATE: A directory, contains a template(String)
 	},
 
-	VARIABLES: A collection of special variables(Array),
-
 	onCreate: A callback, will be called when an article will be created(Function),
 	onDelete: A callback, will be called when any articles will be deleted(Function),
 	onSave: A callback, will be called when any articles will be drafted(Function),

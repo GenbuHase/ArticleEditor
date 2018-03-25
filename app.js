@@ -1,13 +1,14 @@
 const fs = require("fs");
+const extendedFs = require("./system/libraries/extendedFs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const multer = require("multer");
-const Util = require("./system/libraries/Util");
-const API = require("./system/libraries/API");
 const CONFIG = require("./system/config");
+const API = require("./system/libraries/API");
+const MagicFormatter = require("./system/libraries/MagicFormatter");
 
-const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
+const self = { fs, express, bodyParser, methodOverride, extendedFs, CONFIG };
 
 const CommonUpload = multer({ dest: `./${CONFIG.PATH.COMMONMEDIA}/` });
 
@@ -47,6 +48,34 @@ let app = express();
 
 				id,
 				content: API.getArticle(id)
+			}));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Creates new files with a unused id
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   id ... A new article's id
+	 * }
+	 */
+	app.post("/api/new", (req, res) => {
+		let id = API.getNextArticleId();
+
+		try {
+			API.createArticle(id);
+			CONFIG.onCreate(self, id);
+
+			res.end(JSON.stringify({
+				status: "success",
+				id
 			}));
 		} catch (error) {
 			res.status(500).end(JSON.stringify({
@@ -137,57 +166,6 @@ let app = express();
 	});
 
 	/**
-	 * Returns a list of articles
-	 * 
-	 * [Result]
-	 * {
-	 *   status ... "success" or "failure"
-	 *   articles ... A collection of articles
-	 * }
-	 */
-	app.get("/api/articles", (req, res) => {
-		try {
-			res.end(JSON.stringify({
-				status: "success",
-				articles: API.getArticles()
-			}));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
-	 * Creates new files with a unused id
-	 * 
-	 * [Result]
-	 * {
-	 *   status ... "success" or "failure"
-	 *   id ... A new article's id
-	 * }
-	 */
-	app.post("/api/new", (req, res) => {
-		let id = API.getNextArticleId();
-
-		try {
-			API.createArticle(id);
-			CONFIG.onCreate(self, id);
-
-			res.end(JSON.stringify({
-				status: "success",
-				id
-			}));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
 	 * Generates the article's page
 	 * 
 	 * <URL Params>
@@ -230,32 +208,6 @@ let app = express();
 	});
 
 	/**
-	 * Returns a preview with provided data
-	 * 
-	 * <Query Params>
-	 * title ... An article's title
-	 * createdAt ... A date of an article created
-	 * content ... An article's content
-	 * 
-	 * 
-	 * 
-	 * [Result]
-	 * A preview generated with provided data
-	 */
-	app.get("/api/preview", (req, res) => {
-		let articleData = JSON.parse(req.query);
-
-		try {
-			res.end(API.getPreviewWithData(articleData));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
 	 * Returns an article's preview
 	 * 
 	 * <URL Params>
@@ -270,7 +222,32 @@ let app = express();
 		let id = req.params.id;
 
 		try {
-			res.end(API.getPreview(id));
+			let formatter = new MagicFormatter(id, API.getPreview(id));
+			
+			res.end(formatter.forPreview);
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Returns a list of articles
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   articles ... A collection of articles
+	 * }
+	 */
+	app.get("/api/articles", (req, res) => {
+		try {
+			res.end(JSON.stringify({
+				status: "success",
+				articles: API.getArticles()
+			}));
 		} catch (error) {
 			res.status(500).end(JSON.stringify({
 				status: "failure",
@@ -434,7 +411,7 @@ let app = express();
 				'<html>',
 				'	<head>',
 				'		<meta charset="utf-8" />',
-				'		<title>${title} in ${createdAt}</title>',
+				'		<title>${title} at ${createdAt}</title>',
 				'	</head>',
 				'	',
 				'	<body>',

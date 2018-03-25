@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-module.exports = class Util {
+module.exports = class extendedFs {
 	static mkdirsSync (path = "") {
 		let folders = path.split("/");
 			folders.forEach((dirName, index) => {
