@@ -5,7 +5,7 @@ if (!this.module && this.window) {
 
 module.exports = {
 	PORT: 8005,
-
+	
 	PATH: {
 		ARTICLE: "articles",
 		PUBLISH: "publishes",
@@ -18,5 +18,6 @@ module.exports = {
 	onDelete (self, id = 0) {},
 	onSave (self, id = 0, path = "", article = {}) {},
 	onPublish (self, id = 0, path = "", content = "") {},
-	onUpload (self, id = 0, path = "") {}
+	onCommonMediaUpload (self, path = "", filename = "") {},
+	onMediaUpload (self, id = 0, path = "", filename = "") {}
 }

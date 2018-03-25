@@ -14,7 +14,7 @@ module.exports = class MagicFormatter {
 
 	get forPublish () {
 		let formatted = this.commonImageForPublish.articleImageForPublish.anchor;
-
+		
 		return formatted.content;
 	}
 

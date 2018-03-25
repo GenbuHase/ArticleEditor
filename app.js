@@ -273,8 +273,11 @@ let app = express();
 
 		try {
 			for (let i = 0; i < medias.length; i++) {
-				let fixedPath = API.uploadMedia(medias[i]);
-				mediaPath.push(fixedPath);
+				let media = medias[i],
+					path = API.uploadMedia(media);
+
+				mediaPath.push(path);
+				CONFIG.onCommonMediaUpload(self, path, media.originalname);
 			}
 
 			res.end(JSON.stringify({
@@ -307,7 +310,9 @@ let app = express();
 	 * }
 	 */
 	app.post("/api/media/:id", (req, res) => {
-		multer({ dest: `./${CONFIG.PATH.MEDIA}/${req.params.id}/` }).array("medias")(req, res, err => {
+		let id = req.params.id;
+
+		multer({ dest: `./${CONFIG.PATH.MEDIA}/${id}/` }).array("medias")(req, res, err => {
 			if (err) {
 				res.status(500).end(JSON.stringify({
 					status: "failure",
@@ -319,8 +324,11 @@ let app = express();
 
 				try {
 					for (let i = 0; i < medias.length; i++) {
-						let fixedPath = API.uploadMedia(medias[i]);
-						mediaPath.push(fixedPath);
+						let media = medias[i],
+							path = API.uploadMedia(media);
+
+						mediaPath.push(path);
+						CONFIG.onMediaUpload(self, id, path, media.originalname);
 					}
 
 					res.end(JSON.stringify({
