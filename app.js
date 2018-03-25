@@ -109,14 +109,13 @@ let app = express();
 	 * }
 	 */
 	app.post("/api/article/:id", (req, res) => {
-		let id = req.params.id;
-		let { title, createdAt, content } = req.body;
-
-		let path = `${CONFIG.PATH.ARTICLE}/${id}.json`;
+		let id = req.params.id,
+			data = req.body;
 
 		try {
-			API.saveArticle(id, { title, createdAt, content });
-			CONFIG.onSave(self, id, path, { title, createdAt, content });
+			let path = API.saveArticle(id, req.body).path;
+
+			CONFIG.onSave(self, id, path, data);
 
 			res.end(JSON.stringify({
 				status: "success",
@@ -183,13 +182,11 @@ let app = express();
 	 * }
 	 */
 	app.post("/api/publish/:id", (req, res) => {
-		let id = req.params.id,
-			path = `${CONFIG.PATH.PUBLISH}/${id}`;
+		let id = req.params.id;
 
 		try {
-			let content = API.getPreview(id);
+			let { path, content } = API.publishArticle(id);
 
-			API.publishArticle(id);
 			CONFIG.onPublish(self, id, path, content);
 
 			res.end(JSON.stringify({
@@ -223,7 +220,7 @@ let app = express();
 
 		try {
 			let formatter = new MagicFormatter(id, API.getPreview(id));
-			
+
 			res.end(formatter.forPreview);
 		} catch (error) {
 			res.status(500).end(JSON.stringify({
@@ -418,7 +415,7 @@ let app = express();
 				'		${content}',
 				'	</body>',
 				'</html>'
-			].join("\r\n"));
+			].join("\r\n"), err => null);
 		}
 
 		console.log(`[Article Editor] I'm running on port ${CONFIG.PORT}!!`);

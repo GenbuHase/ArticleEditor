@@ -7,13 +7,15 @@ module.exports = class MagicFormatter {
 	}
 
 	get forPreview () {
-		let formatted = this.commonImage.articleImage.anchor;
+		let formatted = this.commonImageForPreview.articleImageForPreview.anchor;
 
 		return formatted.content;
 	}
 
 	get forPublish () {
-		return this.content;
+		let formatted = this.commonImageForPublish.articleImageForPublish.anchor;
+
+		return formatted.content;
 	}
 
 
@@ -23,12 +25,20 @@ module.exports = class MagicFormatter {
 	}
 
 	//![:Alt属性](:画像URL)
-	get articleImage () {
+	get articleImageForPreview () {
 		return new MagicFormatter(this.id, this.content.replace(/!\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.MEDIA}/${this.id}/$2" Alt = "$1" />`));
 	}
 
+	get articleImageForPublish () {
+		return new MagicFormatter(this.id, this.content.replace(/!\[(.*)\]\((.+)\)/g, `<Img Src = "$2" Alt = "$1" />`));
+	}
+
 	//!^[:Alt属性](:画像URL)
-	get commonImage () {
+	get commonImageForPreview () {
 		return new MagicFormatter(this.id, this.content.replace(/!\^\[(.*)\]\((.+)\)/g, `<Img Src = "/${CONFIG.PATH.COMMONMEDIA}/$2" Alt = "$1" />`));
+	}
+
+	get commonImageForPublish () {
+		return new MagicFormatter(this.id, this.content.replace(/!\^\[(.*)\]\((.+)\)/g, `<Img Src = "../common/$2" Alt = "$1" />`));
 	}
 }

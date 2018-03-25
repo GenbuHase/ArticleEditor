@@ -22,10 +22,15 @@ module.exports = class API {
 		}, null, "\t"));
 
 		fs.mkdirSync(`${CONFIG.PATH.MEDIA}/${id}`);
+
+		return id;
 	}
 
 	static saveArticle (id = 0, data = {}) {
-		fs.writeFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, JSON.stringify(data, null, "\t"));
+		let path = `${CONFIG.PATH.ARTICLE}/${id}.json`;
+		fs.writeFileSync(path, JSON.stringify(data, null, "\t"));
+
+		return { path, data };
 	}
 
 	static deleteArticle (id = 0) {
@@ -33,15 +38,21 @@ module.exports = class API {
 		extendedFs.removedirSync(`${CONFIG.PATH.MEDIA}/${id}`);
 
 		if (fs.existsSync(`${CONFIG.PATH.PUBLISH}/${id}`)) extendedFs.removedirSync(`${CONFIG.PATH.PUBLISH}/${id}`);
+
+		return id;
 	}
 
 	static publishArticle (id = 0) {
-		let publishPath = `${CONFIG.PATH.PUBLISH}/${id}`,
-			content = this.getPreview(id);
+		let path = `${CONFIG.PATH.PUBLISH}/${id}`;
 
-		if (fs.existsSync(publishPath)) extendedFs.removedirSync(publishPath);
-		extendedFs.writeFileWithDirSync(`${publishPath}/index.html`, content);
-		extendedFs.copydirSync(`${CONFIG.PATH.MEDIA}/${id}`, `${publishPath}`);
+		let formatter = new MagicFormatter(id, this.getPreview(id)),
+			content = formatter.forPublish;
+
+		if (fs.existsSync(path)) extendedFs.removedirSync(path);
+		extendedFs.writeFileWithDirSync(`${path}/index.html`, content);
+		extendedFs.copydirSync(`${CONFIG.PATH.MEDIA}/${id}`, `${path}`);
+
+		return { id, path, content };
 	}
 
 	static getPreview (id = 0) {

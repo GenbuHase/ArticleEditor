@@ -80,14 +80,6 @@ class IO {
 	}
 
 	/**
-	 * @param {Number} id An article's id
-	 * @param {Function} [callback=function () {}] A callback, called when the process will have finished
-	 */
-	static getPreview (id, callback = function () {}) {
-
-	}
-
-	/**
 	 * @param {Function} [callback=function () {}] A callback, called when the process will have finished
 	 */
 	static getArticles (callback = function () {}) {
