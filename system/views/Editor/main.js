@@ -20,6 +20,8 @@ window.addEventListener("DOMContentLoaded", () => {
 	const deleteBtn = document.getElementById("Editor-Btns-Delete");
 	const publishAllBtn = document.getElementById("Toolbar-PublishAll");
 
+	const caretManager = new CaretManager(articleContent);
+
 	document.querySelectorAll("Select").forEach(selectBox => M.Select.init(selectBox));
 	document.querySelectorAll(".tabs").forEach(tab => M.Tabs.init(tab));
 
@@ -89,6 +91,20 @@ window.addEventListener("DOMContentLoaded", () => {
 				articleAlbum.appendChild(thumb);
 			}
 		});
+	});
+
+	articleContent.addEventListener("keydown", event => {
+		switch (event.keyCode) {
+			default:
+				return;
+				break;
+
+			case 9:
+				caretManager.appendText("\t");
+				break;
+		}
+
+		event.preventDefault();
 	});
 
 	[articleMediaPicker, commonMediaPicker].forEach(picker => {
