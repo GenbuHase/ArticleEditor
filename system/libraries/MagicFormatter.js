@@ -7,14 +7,14 @@ module.exports = class MagicFormatter {
 	}
 
 	get forPreview () {
-		let formatted = this.commonImageForPreview.articleImageForPreview.anchor;
+		let formatted = this.commonImageForPreview.articleImageForPreview.blankAnchor.anchor;
 
 		return formatted.content;
 	}
 
 	get forPublish () {
-		let formatted = this.commonImageForPublish.articleImageForPublish.anchor;
-		
+		let formatted = this.commonImageForPublish.articleImageForPublish.blankAnchor.anchor;
+
 		return formatted.content;
 	}
 
@@ -22,6 +22,10 @@ module.exports = class MagicFormatter {
 	//[:アンカー文字列](:リンク先URL)
 	get anchor () {
 		return new MagicFormatter(this.id, this.content.replace(/\[(.*)\]\((.+)\)/g, '<A Href = "$2">$1</A>'));
+	}
+
+	get blankAnchor () {
+		return new MagicFormatter(this.id, this.content.replace(/:\[(.*)\]\((.+)\)/g, '<A Href = "$2" Target = "_blank">$1</A>'));
 	}
 
 	//![:Alt属性](:画像URL)
