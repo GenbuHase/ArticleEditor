@@ -4,6 +4,17 @@ const CONFIG = require("./../config");
 const MagicFormatter = require("./MagicFormatter");
 
 module.exports = class API {
+	static get R () {
+		return {
+			PREVIEW: {
+				PREVIEW_MODE: 0x0001,
+				PUBLISH_MODE: 0x0002
+			}
+		}
+	}
+
+
+
 	static getArticle (id = 0) {
 		return fs.readFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, "UTF-8");
 	}
@@ -43,11 +54,9 @@ module.exports = class API {
 	}
 
 	static publishArticle (id = 0) {
-		let path = `${CONFIG.PATH.PUBLISH}/${id}`;
-
-		let formatter = new MagicFormatter(id, this.getPreview(id)),
-			content = formatter.forPublish;
-
+		let path = `${CONFIG.PATH.PUBLISH}/${id}`,
+			content = this.getPreview(id, API.R.PREVIEW.PUBLISH_MODE);
+			
 		if (fs.existsSync(path)) extendedFs.removedirSync(path);
 		extendedFs.writeFileWithDirSync(`${path}/index.html`, content);
 		extendedFs.copydirSync(`${CONFIG.PATH.MEDIA}/${id}`, `${path}`);
@@ -55,9 +64,19 @@ module.exports = class API {
 		return { id, path, content };
 	}
 
-	static getPreview (id = 0) {
+	static getPreview (id = 0, formatMode = this.R.PREVIEW.PREVIEW_MODE) {
 		let content = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8"),
 			article = JSON.parse(this.getArticle(id));
+
+		switch (formatMode) {
+			case this.R.PREVIEW.PREVIEW_MODE:
+				article.content = new MagicFormatter(id, article.content).forPreview;
+				break;
+
+			case this.R.PREVIEW.PUBLISH_MODE:
+				article.content = new MagicFormatter(id, article.content).forPublish;
+				break;
+		}
 
 		["title", "createdAt", "content"].forEach(variable => {
 			content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable])

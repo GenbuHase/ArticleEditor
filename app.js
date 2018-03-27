@@ -219,9 +219,7 @@ let app = express();
 		let id = req.params.id;
 
 		try {
-			let formatter = new MagicFormatter(id, API.getPreview(id));
-
-			res.end(formatter.forPreview);
+			res.end(API.getPreview(id, API.R.PREVIEW.PREVIEW_MODE));
 		} catch (error) {
 			res.status(500).end(JSON.stringify({
 				status: "failure",
