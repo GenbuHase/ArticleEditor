@@ -97,7 +97,6 @@ window.addEventListener("DOMContentLoaded", () => {
 		switch (event.keyCode) {
 			default:
 				return;
-				break;
 
 			case 9:
 				caretManager.appendText("\t");
@@ -118,7 +117,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		picker.addEventListener("drop", () => {
 			mediaPickerForeground.classList.remove("isDropping");
-		})
+		});
 	});
 
 	articleMediaPicker.addEventListener("drop", event => {
@@ -142,7 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
 						return;
 					}
 
-					let thumbnail = Components.generateThumbnail(id, path)
+					let thumbnail = Components.generateThumbnail(id, path);
 						M.Tooltip.init(thumbnail);
 
 					articleAlbum.appendChild(thumbnail);
@@ -169,7 +168,7 @@ window.addEventListener("DOMContentLoaded", () => {
 						return;
 					}
 
-					let thumbnail = Components.generateCommonThumbnail(path)
+					let thumbnail = Components.generateCommonThumbnail(path);
 						M.Tooltip.init(thumbnail);
 
 					commonAlbum.appendChild(thumbnail);
@@ -191,8 +190,14 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 
 	previewBtn.addEventListener("click", () => {
-		saveBtn.click();
-		articlePreview.contentWindow.location.reload();
+		IO.saveArticle(articleId.value, {
+			title: articleTitle.value,
+			createdAt: articleCreatedAt.value,
+			content: articleContent.value
+		}, res => {
+			M.toast({ html: `記事(ID：${res.id})が保存されました` });
+			articlePreview.contentWindow.location.reload();
+		});
 	});
 
 	publishBtn.addEventListener("click", () => {
