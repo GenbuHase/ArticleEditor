@@ -22,17 +22,17 @@ module.exports = class MagicFormatter {
 
 	//*:強調文字列*
 	emphasis () {
-		return new MagicFormatter(this.id, this.content.replace(/\*((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!\*))+)\*(?!(?:\S))/g, '<B>$1</B>'));
+		return new MagicFormatter(this.id, this.content.replace(/\*((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!\*))+)\*(?!\S)/g, '<B>$1</B>'));
 	}
 
 	//_:斜体文字列_
 	italic () {
-		return new MagicFormatter(this.id, this.content.replace(/_((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!_))+)_(?!(?:\S))/g, '<I>$1</I>'));
+		return new MagicFormatter(this.id, this.content.replace(/_((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!_))+)_(?!\S)/g, '<I>$1</I>'));
 	}
 
 	//-:打ち消し文字列-
 	strikeThrough () {
-		return new MagicFormatter(this.id, this.content.replace(/-((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!-))+)-(?!(?:\S))/g, '<S>$1</S>'));
+		return new MagicFormatter(this.id, this.content.replace(/-((?:\S|[ \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff](?!-))+)-(?!\S)/g, '<S>$1</S>'));
 	}
 
 	//[:アンカー文字列](:リンク先URL)
