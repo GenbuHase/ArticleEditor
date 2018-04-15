@@ -21,9 +21,6 @@ You could create any articles easily if you used "Article Editor".
 
 ## Requirement
 * [Node.js](https://nodejs.org/)
-* [express](https://npmjs.com/package/express)
-* [method-override](https://npmjs.com/package/method-override)
-* [multer](https://npmjs.com/package/multer)
 
 
 ## How to Use
@@ -63,8 +60,6 @@ $ npm install
 		COMMONMEDIA: A directory, contains common medias(String),
 		TEMPLATE: A directory, contains a template(String)
 	},
-
-	VARIABLES: A collection of special variables(Array),
 
 	onCreate: A callback, will be called when an article will be created(Function),
 	onDelete: A callback, will be called when any articles will be deleted(Function),

@@ -1,13 +1,14 @@
 const fs = require("fs");
+const extendedFs = require("./system/libraries/extendedFs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const multer = require("multer");
-const Util = require("./system/libraries/Util");
-const API = require("./system/libraries/API");
 const CONFIG = require("./system/config");
+const API = require("./system/libraries/API");
+const MagicFormatter = require("./system/libraries/MagicFormatter");
 
-const self = { fs, express, bodyParser, methodOverride, Util, CONFIG };
+const self = { fs, express, bodyParser, methodOverride, extendedFs, CONFIG };
 
 const CommonUpload = multer({ dest: `./${CONFIG.PATH.COMMONMEDIA}/` });
 
@@ -20,9 +21,23 @@ let app = express();
 	app.use("", express.static(`${__dirname}/system/views/Editor`));
 	app.use("/config.js", express.static(`${__dirname}/system/config.js`));
 	app.use("/libraries", express.static(`${__dirname}/system/views/libraries`));
+	app.use(express.static(`${__dirname}/${CONFIG.PATH.TEMPLATE}`));
 
 	/**
 	 * Returns the article's infomation
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... An article's id
+	 *   content ... An article's content
+	 * }
 	 */
 	app.get("/api/article/:id", (req, res) => {
 		let id = req.params.id;
@@ -43,73 +58,13 @@ let app = express();
 	});
 
 	/**
-	 * Saves the article
-	 */
-	app.post("/api/article/:id", (req, res) => {
-		let id = req.params.id;
-		let { title, createdAt, content } = req.body;
-
-		let path = `${CONFIG.PATH.ARTICLE}/${id}.json`;
-
-		try {
-			API.saveArticle(id, { title, createdAt, content });
-			CONFIG.onSave(self, id, path, { title, createdAt, content });
-
-			res.end(JSON.stringify({
-				status: "success",
-
-				id,
-				path
-			}));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
-	 * Deletes the article
-	 */
-	app.delete("/api/article/:id", (req, res) => {
-		let id = req.params.id;
-
-		try {
-			API.deleteArticle(id);
-			CONFIG.onDelete(self, id);
-			
-			res.end(JSON.stringify({
-				status: "success",
-				id
-			}));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
-	 * Returns a list of articles
-	 */
-	app.get("/api/articles", (req, res) => {
-		try {
-			res.end(JSON.stringify({
-				status: "success",
-				articles: API.getArticles()
-			}));
-		} catch (error) {
-			res.status(500).end(JSON.stringify({
-				status: "failure",
-				error
-			}));
-		}
-	});
-
-	/**
 	 * Creates new files with a unused id
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   id ... A new article's id
+	 * }
 	 */
 	app.post("/api/new", (req, res) => {
 		let id = API.getNextArticleId();
@@ -131,25 +86,113 @@ let app = express();
 	});
 
 	/**
-	 * Generates the article's page
+	 * Saves the article
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * <Payload>
+	 * {
+	 *   title ... An article's title
+	 *   createdAt ... A date of an article created
+	 *   content ... An article's content
+	 * }
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... An article's id
+	 *   path ... An article's path
+	 * }
 	 */
-	app.post("/api/publish/:id", (req, res) => {
+	app.post("/api/article/:id", (req, res) => {
 		let id = req.params.id,
-			path = `${CONFIG.PATH.PUBLISH}/${id}`;
+			data = req.body;
 
 		try {
-			let article = JSON.parse(API.getArticle(req.body.id)),
-				content = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8");
+			let path = API.saveArticle(id, req.body).path;
 
-			CONFIG.VARIABLES.forEach(variable => content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable]));
+			CONFIG.onSave(self, id, path, data);
 
-			API.publishArticle(id, content);
+			res.end(JSON.stringify({
+				status: "success",
+
+				id,
+				path
+			}));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Deletes the article
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   id ... An article's id
+	 * }
+	 */
+	app.delete("/api/article/:id", (req, res) => {
+		let id = req.params.id;
+
+		try {
+			API.deleteArticle(id);
+			CONFIG.onDelete(self, id);
+			
+			res.end(JSON.stringify({
+				status: "success",
+				id
+			}));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Generates the article's page
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   
+	 *   id ... A generated page's id
+	 *   path ... A generated page's path
+	 *   content ... A generated page's content
+	 * }
+	 */
+	app.post("/api/publish/:id", (req, res) => {
+		let id = req.params.id;
+
+		try {
+			let { path, content } = API.publishArticle(id);
+
 			CONFIG.onPublish(self, id, path, content);
 
 			res.end(JSON.stringify({
 				status: "success",
 
-				id: req.body.id,
+				id,
 				path,
 				content
 			}));
@@ -162,16 +205,77 @@ let app = express();
 	});
 
 	/**
+	 * Returns an article's preview
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * An article's preview
+	 */
+	app.get("/api/preview/:id", (req, res) => {
+		let id = req.params.id;
+
+		try {
+			res.end(API.getPreview(id, API.R.PREVIEW.PREVIEW_MODE));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
+	 * Returns a list of articles
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   articles ... A collection of articles
+	 * }
+	 */
+	app.get("/api/articles", (req, res) => {
+		try {
+			res.end(JSON.stringify({
+				status: "success",
+				articles: API.getArticles()
+			}));
+		} catch (error) {
+			res.status(500).end(JSON.stringify({
+				status: "failure",
+				error
+			}));
+		}
+	});
+
+	/**
 	 * Uploads selected medias to common directory
+	 * 
+	 * <Payload>
+	 * A multipart data
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   mediaPath ... A collection of medias' path
+	 * }
 	 */
 	app.post("/api/media", CommonUpload.array("medias"), (req, res) => {
 		let medias = req.files,
-			mediaPath = medias.length > 1 ? [] : "";
+			mediaPath = [];
 
 		try {
 			for (let i = 0; i < medias.length; i++) {
-				let fixedPath = API.uploadMedia(medias[i]);
-				Array.isArray(mediaPath) ? mediaPath.push(fixedPath) : mediaPath = fixedPath;
+				let media = medias[i],
+					path = API.uploadMedia(media);
+
+				mediaPath.push(path);
+				CONFIG.onCommonMediaUpload(self, path, media.originalname);
 			}
 
 			res.end(JSON.stringify({
@@ -188,9 +292,25 @@ let app = express();
 
 	/**
 	 * Uploads selected medias to article's directory
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * <Payload>
+	 * A multipart data
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   mediaPath ... A collection of medias' path
+	 * }
 	 */
 	app.post("/api/media/:id", (req, res) => {
-		multer({ dest: `./${CONFIG.PATH.MEDIA}/${req.params.id}/` }).array("medias")(req, res, err => {
+		let id = req.params.id;
+
+		multer({ dest: `./${CONFIG.PATH.MEDIA}/${id}/` }).array("medias")(req, res, err => {
 			if (err) {
 				res.status(500).end(JSON.stringify({
 					status: "failure",
@@ -198,12 +318,15 @@ let app = express();
 				}));
 			} else {
 				let medias = req.files,
-					mediaPath = medias.length > 1 ? [] : "";
+					mediaPath = [];
 
 				try {
 					for (let i = 0; i < medias.length; i++) {
-						let fixedPath = API.uploadMedia(medias[i]);
-						Array.isArray(mediaPath) ? mediaPath.push(fixedPath) : mediaPath = fixedPath;
+						let media = medias[i],
+							path = API.uploadMedia(media);
+
+						mediaPath.push(path);
+						CONFIG.onMediaUpload(self, id, path, media.originalname);
 					}
 
 					res.end(JSON.stringify({
@@ -222,6 +345,12 @@ let app = express();
 
 	/**
 	 * Gets a list of common medias
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   medias ... A collection of common medias
+	 * }
 	 */
 	app.get("/api/medias", (req, res) => {
 		try {
@@ -239,6 +368,17 @@ let app = express();
 
 	/**
 	 * Gets a list of article's medias
+	 * 
+	 * <URL Params>
+	 * :id ... An article's id
+	 * 
+	 * 
+	 * 
+	 * [Result]
+	 * {
+	 *   status ... "success" or "failure"
+	 *   medias ... A collection of article's medias
+	 * }
 	 */
 	app.get("/api/medias/:id", (req, res) => {
 		let id = req.params.id;
@@ -256,7 +396,9 @@ let app = express();
 		}
 	});
 
-	app.get(/.*/, (req, res) => res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`));
+	app.get(/.*/, (req, res) => {
+		res.sendFile(`${__dirname}/${decodeURIComponent(req.url)}`);
+	});
 
 	app.listen(CONFIG.PORT, () => {
 		if (!fs.existsSync(CONFIG.PATH.ARTICLE)) fs.mkdir(CONFIG.PATH.ARTICLE);
@@ -272,14 +414,14 @@ let app = express();
 				'<html>',
 				'	<head>',
 				'		<meta charset="utf-8" />',
-				'		<title>${title} in ${createdAt}</title>',
+				'		<title>${title} at ${createdAt}</title>',
 				'	</head>',
 				'	',
 				'	<body>',
 				'		${content}',
 				'	</body>',
 				'</html>'
-			].join("\r\n"));
+			].join("\r\n"), err => null);
 		}
 
 		console.log(`[Article Editor] I'm running on port ${CONFIG.PORT}!!`);

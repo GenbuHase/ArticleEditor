@@ -1,14 +1,22 @@
 const fs = require("fs");
-const Util = require("./Util");
+const extendedFs = require("./extendedFs");
 const CONFIG = require("./../config");
+const MagicFormatter = require("./MagicFormatter");
 
 module.exports = class API {
-	static getArticle (id = 0) {
-		return fs.readFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, "UTF-8");
+	static get R () {
+		return {
+			PREVIEW: {
+				PREVIEW_MODE: 0x0001,
+				PUBLISH_MODE: 0x0002
+			}
+		}
 	}
 
-	static getArticles () {
-		return fs.readdirSync(CONFIG.PATH.ARTICLE);
+
+
+	static getArticle (id = 0) {
+		return fs.readFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, "UTF-8");
 	}
 
 	static getNextArticleId () {
@@ -18,31 +26,67 @@ module.exports = class API {
 	}
 
 	static createArticle (id = 0) {
-		Util.writeFileWithDirSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, JSON.stringify({
+		fs.writeFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, JSON.stringify({
 			title: "",
 			createdAt: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
 			content: ""
 		}, null, "\t"));
 
-		Util.mkdirsSync(`${CONFIG.PATH.MEDIA}/${id}`);
+		fs.mkdirSync(`${CONFIG.PATH.MEDIA}/${id}`);
+
+		return id;
 	}
 
 	static saveArticle (id = 0, data = {}) {
-		fs.writeFileSync(`${CONFIG.PATH.ARTICLE}/${id}.json`, JSON.stringify(data, null, "\t"));
-	}
+		let path = `${CONFIG.PATH.ARTICLE}/${id}.json`;
+		fs.writeFileSync(path, JSON.stringify(data, null, "\t"));
 
-	static publishArticle (id = 0, content = "") {
-		let publishPath = `${CONFIG.PATH.PUBLISH}/${id}`;
-
-		if (fs.existsSync(publishPath)) Util.removedirSync(publishPath);
-		Util.writeFileWithDirSync(`${publishPath}/index.html`, content);
+		return { path, data };
 	}
 
 	static deleteArticle (id = 0) {
 		fs.unlinkSync(`${CONFIG.PATH.ARTICLE}/${id}.json`);
-		Util.removedirSync(`${CONFIG.PATH.MEDIA}/${id}`);
+		extendedFs.removedirSync(`${CONFIG.PATH.MEDIA}/${id}`);
 
-		if (fs.existsSync(`${CONFIG.PATH.PUBLISH}/${id}`)) Util.removedirSync(`${CONFIG.PATH.PUBLISH}/${id}`);
+		if (fs.existsSync(`${CONFIG.PATH.PUBLISH}/${id}`)) extendedFs.removedirSync(`${CONFIG.PATH.PUBLISH}/${id}`);
+
+		return id;
+	}
+
+	static publishArticle (id = 0) {
+		let path = `${CONFIG.PATH.PUBLISH}/${id}`,
+			content = this.getPreview(id, API.R.PREVIEW.PUBLISH_MODE);
+			
+		if (fs.existsSync(path)) extendedFs.removedirSync(path);
+		extendedFs.writeFileWithDirSync(`${path}/index.html`, content);
+		extendedFs.copydirSync(`${CONFIG.PATH.MEDIA}/${id}`, `${path}`);
+
+		return { id, path, content };
+	}
+
+	static getPreview (id = 0, formatMode = this.R.PREVIEW.PREVIEW_MODE) {
+		let content = fs.readFileSync(`${CONFIG.PATH.TEMPLATE}/index.html`, "UTF-8"),
+			article = JSON.parse(this.getArticle(id));
+
+		switch (formatMode) {
+			case this.R.PREVIEW.PREVIEW_MODE:
+				article.content = new MagicFormatter(id, article.content).forPreview;
+				break;
+
+			case this.R.PREVIEW.PUBLISH_MODE:
+				article.content = new MagicFormatter(id, article.content).forPublish;
+				break;
+		}
+
+		["title", "createdAt", "content"].forEach(variable => {
+			content = content.replace(new RegExp(`\\\${${variable}}`, "g"), article[variable])
+		});
+
+		return content;
+	}
+
+	static getArticles () {
+		return fs.readdirSync(CONFIG.PATH.ARTICLE);
 	}
 
 	static getMedias (id = 0) {

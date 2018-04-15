@@ -15,6 +15,8 @@
 
 		<Script Src = "config.js"></Script>
 		<Script Src = "libraries/DOM Extender v4.0.js"></Script>
+		<Script Src = "libraries/CaretManager.js"></Script>
+		<Script Src = "libraries/IO.js"></Script>
 		<Script Src = "libraries/Components.js"></Script>
 
 		<Script Src = "main.js" Defer = "Defer"></Script>
@@ -72,14 +74,25 @@
 				<Section ID = "Editor-Content">
 					<Section>
 						<Div Class = "input-field">
+
+						</Div>
+
+						<Div Class = "input-field">
 							<Textarea ID = "Editor-Content-Text" Class = "materialize-textarea"></Textarea>
 							<Label For = "Editor-Content-Text">記事内容</Label>
 						</Div>
+
+						<IFrame ID = "Editor-Content-Preview" Name = "Editor-Content-Preview"></IFrame>
 
 						<Section ID = "Editor-Btns">
 							<A ID = "Editor-Btns-Save" Class = "btn disabled waves-effect waves-light">
 								<I Class = "material-icons left">save</I>
 								下書き保存
+							</A>
+
+							<A ID = "Editor-Btns-Preview" Class = "btn disabled waves-effect waves-light">
+								<I Class = "material-icons left">update</I>
+								プレビュー
 							</A>
 
 							<A ID = "Editor-Btns-Publish" Class = "btn disabled waves-effect waves-light">

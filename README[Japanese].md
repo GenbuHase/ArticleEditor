@@ -21,9 +21,6 @@
 
 ## 動作環境・開発環境 | Requirement
 * [Node.js](https://nodejs.org/)
-* [express](https://npmjs.com/package/express)
-* [method-override](https://npmjs.com/package/method-override)
-* [multer](https://npmjs.com/package/multer)
 
 
 ## 使用方法 | How to Use
@@ -63,8 +60,6 @@ $ npm install
 		COMMONMEDIA: ブログ内メディア格納ディレクトリ(String),
 		TEMPLATE: テンプレートHTML格納ディレクトリ(String)
 	},
-
-	VARIABLES: 特殊変数名(Array),
 
 	onCreate: 新規作成時に呼ばれるコールバック関数(Function),
 	onDelete: 記事削除時に呼ばれるコールバック関数(Function),

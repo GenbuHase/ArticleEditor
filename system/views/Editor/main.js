@@ -3,6 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	const articleTitle = document.getElementById("Editor-Info-Title");
 	const articleCreatedAt = document.getElementById("Editor-Info-CreatedAt");
 	const articleContent = document.getElementById("Editor-Content-Text");
+	const articlePreview = document.getElementById("Editor-Content-Preview");
 
 	const articleMediaForm = document.getElementById("Editor-Content-Medias-InArticle").querySelector("Form");
 	const articleMediaPicker = document.getElementById("Editor-Content-Medias-InArticle-MediaPicker");
@@ -14,9 +15,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	const btns = document.getElementById("Editor-Btns");
 	const saveBtn = document.getElementById("Editor-Btns-Save");
+	const previewBtn = document.getElementById("Editor-Btns-Preview");
 	const publishBtn = document.getElementById("Editor-Btns-Publish");
 	const deleteBtn = document.getElementById("Editor-Btns-Delete");
 	const publishAllBtn = document.getElementById("Toolbar-PublishAll");
+
+	const caretManager = new CaretManager(articleContent);
 
 	document.querySelectorAll("Select").forEach(selectBox => M.Select.init(selectBox));
 	document.querySelectorAll(".tabs").forEach(tab => M.Tabs.init(tab));
@@ -38,83 +42,68 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		switch (id) {
 			default:
+				articlePreview.src = `/api/preview/${id}`,
 				articleMediaForm.action = `/api/media/${id}`;
+
 				Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
-
-				break;
-
-			case "None":
-				articleMediaForm.action = "";
-				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
-
-				return;
 				break;
 
 			case "Add":
-				DOM.xhr({
-					type: "POST",
-					url: "/api/new",
+				IO.createArticle(res => {
+					id = res.id;
+					
+					let article = new Option(id, id);
+						article.selected = true;
 
-					headers: {
-						"Content-Type": "application/json"
-					},
+					articleId.M_Select.$selectOptions[1].appendChild(article);
+					M.Select.init(articleId);
 
-					onLoad (event) {
-						id = JSON.parse(event.target.response).id;
-						
-						let article = new Option(id, id);
-							article.selected = true;
+					articlePreview.src = `/api/preview/${id}`,
+					articleMediaForm.action = `/api/media/${id}`;
+					Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
 
-						articleId.M_Select.$selectOptions[1].appendChild(article);
-						M.Select.init(articleId);
-
-						articleMediaForm.action = `/api/media/${id}`;
-						Array.from(btns.children).forEach(btn => btn.classList.remove("disabled"));
-
-						M.toast({ html: `記事(ID：${id})が新規作成されました` });
-					}
+					M.toast({ html: `記事(ID：${id})が新規作成されました` });
 				});
 				
 				break;
 		}
 
-		DOM.xhr({
-			type: "GET",
-			url: `/api/article/${id}`,
-			resType: "json",
-			doesSync: true,
+		IO.getArticle(id, res => {
+			let { title, createdAt, content } = JSON.parse(res.content);
+			
+			articleTitle.value = title,
+			articleCreatedAt.value = createdAt,
+			articleContent.value = content;
 
-			onLoad (event) {
-				let { title, createdAt, content } = JSON.parse(event.target.response.content);
-
-				articleTitle.value = title,
-				articleCreatedAt.value = createdAt,
-				articleContent.value = content;
-
-				M.updateTextFields(),
-				M.textareaAutoResize(articleContent);
-			}
+			M.updateTextFields(),
+			M.textareaAutoResize(articleContent);
 		});
 
-		DOM.xhr({
-			type: "GET",
-			url: `/api/medias/${id}`,
-			resType: "json",
-			doesSync: true,
+		IO.getMedias(id, res => {
+			while (articleAlbum.children.length != 0) articleAlbum.children[0].remove();
 
-			onLoad (event) {
-				while (articleAlbum.children.length != 0) articleAlbum.children[0].remove();
+			let medias = res.medias;
 
-				let medias = event.target.response.medias;
+			for (let i = 0; i < medias.length; i++) {
+				let thumb = Components.generateThumbnail(id, medias[i]);
+					M.Tooltip.init(thumb);
 
-				for (let i = 0; i < medias.length; i++) {
-					let thumb = Components.generateThumbnail(id, medias[i]);
-						M.Tooltip.init(thumb);
-
-					articleAlbum.appendChild(thumb);
-				}
+				articleAlbum.appendChild(thumb);
 			}
 		});
+	});
+
+	articleContent.addEventListener("keydown", event => {
+		switch (event.keyCode) {
+			default:
+				return;
+
+			case 9:
+				caretManager.appendText("\t");
+				break;
+		}
+
+		event.preventDefault();
 	});
 
 	[articleMediaPicker, commonMediaPicker].forEach(picker => {
@@ -128,7 +117,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		picker.addEventListener("drop", () => {
 			mediaPickerForeground.classList.remove("isDropping");
-		})
+		});
 	});
 
 	articleMediaPicker.addEventListener("drop", event => {
@@ -152,7 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
 						return;
 					}
 
-					let thumbnail = Components.generateThumbnail(id, path)
+					let thumbnail = Components.generateThumbnail(id, path);
 						M.Tooltip.init(thumbnail);
 
 					articleAlbum.appendChild(thumbnail);
@@ -179,7 +168,7 @@ window.addEventListener("DOMContentLoaded", () => {
 						return;
 					}
 
-					let thumbnail = Components.generateCommonThumbnail(path)
+					let thumbnail = Components.generateCommonThumbnail(path);
 						M.Tooltip.init(thumbnail);
 
 					commonAlbum.appendChild(thumbnail);
@@ -188,136 +177,90 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
+
+
 	saveBtn.addEventListener("click", () => {
-		DOM.xhr({
-			type: "POST",
-			url: `/api/article/${articleId.value}`,
-			resType: "json",
-			doesSync: true,
+		IO.saveArticle(articleId.value, {
+			title: articleTitle.value,
+			createdAt: articleCreatedAt.value,
+			content: articleContent.value
+		}, res => {
+			M.toast({ html: `記事(ID：${res.id})が保存されました` });
+		});
+	});
 
-			headers: {
-				"Content-Type": "application/json"
-			},
-
-			data: JSON.stringify({
-				title: articleTitle.value,
-				createdAt: articleCreatedAt.value,
-				content: articleContent.value
-			}),
-
-			onLoad (event) {
-				M.toast({ html: `記事(ID：${event.target.response.id})が保存されました` });
-			}
+	previewBtn.addEventListener("click", () => {
+		IO.saveArticle(articleId.value, {
+			title: articleTitle.value,
+			createdAt: articleCreatedAt.value,
+			content: articleContent.value
+		}, res => {
+			M.toast({ html: `記事(ID：${res.id})が保存されました` });
+			articlePreview.contentWindow.location.reload();
 		});
 	});
 
 	publishBtn.addEventListener("click", () => {
-		DOM.xhr({
-			type: "POST",
-			url: `/api/publish/${articleId.value}`,
-			resType: "json",
-			doesSync: true,
-
-			onLoad (event) {
-				M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
-			}
+		IO.publishArticle(articleId.value, res => {
+			M.toast({ html: `記事ページ(${res.path})が作成されました` });
 		});
 	});
 
 	deleteBtn.addEventListener("click", () => {
-		DOM.xhr({
-			type: "DELETE",
-			url: `/api/article/${articleId.value}`,
-			resType: "json",
-			doesSync: true,
+		IO.deleteArticle(articleId.value, res => {
+			let id = res.id;
+			
+			articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${id}"]`).remove(),
+			articleId.M_Select.$selectOptions[0].querySelector('Option[Value="None"]').selected = true;
+			
+			articlePreview.src = "",
+			articleMediaForm.action = "";
+			while (articleAlbum.children.length != 0) articleAlbum.children[0].remove();
 
-			onLoad (event) {
-				let id = event.target.response.id;
-				
-				articleId.M_Select.$selectOptions[1].querySelector(`Option[Value="${id}"]`).remove(),
-				articleId.M_Select.$selectOptions[0].querySelector('Option[Value="None"]').selected = true;
-				
-				Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
-				
-				articleTitle.value = "",
-				articleContent.value = "",
-				articleCreatedAt.value = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
+			Array.from(btns.children).forEach(btn => btn.classList.add("disabled"));
+			
+			articleTitle.value = "",
+			articleContent.value = "",
+			articleCreatedAt.value = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
 
-				M.Select.init(articleId),
-				M.updateTextFields(),
-				M.textareaAutoResize(articleContent);
+			M.Select.init(articleId),
+			M.updateTextFields(),
+			M.textareaAutoResize(articleContent);
 
-				M.toast({ html: `記事(ID：${id})が削除されました` });
-			}
+			M.toast({ html: `記事(ID：${id})が削除されました` });
 		});
 	});
 
 	publishAllBtn.addEventListener("click", () => {
-		DOM.xhr({
-			type: "GET",
-			url: "/api/articles",
-			resType: "json",
-			doesSync: true,
-
-			onLoad (event) {
-				for (let articleName in event.target.response.articles) {
-					DOM.xhr({
-						type: "POST",
-						url: "/api/publish",
-						resType: "json",
-						doesSync: true,
-			
-						headers: {
-							"Content-Type": "application/json"
-						},
-			
-						data: JSON.stringify({
-							id: event.target.response.articles[articleName]
-						}),
-			
-						onLoad (event) {
-							M.toast({ html: `記事ページ(${event.target.response.path})が作成されました` });
-						}
-					});
-				}
+		IO.getArticles(res => {
+			for (let articleName in res.articles) {
+				IO.publishArticle(res.articles[articleName], res => {
+					M.toast({ html: `記事ページ(${res.path})が作成されました` });
+				});
 			}
 		});
 	});
 
 
 
-	DOM.xhr({
-		type: "GET",
-		url: "/api/articles",
-		resType: "json",
-		doesSync: true,
+	IO.getArticles(res => {
+		let articles = res.articles;
 
-		onLoad (event) {
-			let articles = event.target.response.articles;
-
-			for (let id in articles) {
-				articleId.M_Select.$selectOptions[1].appendChild(new Option(parseInt(articles[id]), parseInt(articles[id])));
-			}
-
-			M.Select.init(articleId);
+		for (let id in articles) {
+			articleId.M_Select.$selectOptions[1].appendChild(new Option(parseInt(articles[id]), parseInt(articles[id])));
 		}
+
+		M.Select.init(articleId);
 	});
 
-	DOM.xhr({
-		type: "GET",
-		url: `/api/medias`,
-		resType: "json",
-		doesSync: true,
+	IO.getCommonMedias(res => {
+		let medias = res.medias;
 
-		onLoad (event) {
-			let medias = event.target.response.medias;
+		for (let i = 0; i < medias.length; i++) {
+			let thumbnail = Components.generateCommonThumbnail(medias[i]);
+				M.Tooltip.init(thumbnail);
 
-			for (let i = 0; i < medias.length; i++) {
-				let thumbnail = Components.generateCommonThumbnail(medias[i]);
-					M.Tooltip.init(thumbnail);
-
-				commonAlbum.appendChild(thumbnail);
-			}
+			commonAlbum.appendChild(thumbnail);
 		}
 	});
 });
