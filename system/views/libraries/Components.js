@@ -10,6 +10,15 @@ class Components {
 				position: "bottom",
 				delay: 50,
 				tooltip: src
+			},
+
+			events: {
+				dragstart (event) {
+					console.log(event);
+
+					let image = decodeURIComponent(event.dataTransfer.getData("text/uri-list")).replace(new RegExp(`(?:https?|ftp)://.+/${CONFIG.PATH.MEDIA}/\\d+/(.+)`), "![$1]($1)");
+						event.dataTransfer.setData("text/plain", image);
+				}
 			}
 		});
 	}
@@ -25,6 +34,15 @@ class Components {
 				position: "bottom",
 				delay: 50,
 				tooltip: src
+			},
+
+			events: {
+				dragstart (event) {
+					console.log(event);
+
+					let image = decodeURIComponent(event.dataTransfer.getData("text/uri-list")).replace(new RegExp(`(?:https?|ftp)://.+/${CONFIG.PATH.COMMONMEDIA}/(.+)`), "!^[$1]($1)");
+						event.dataTransfer.setData("text/plain", image);
+				}
 			}
 		});
 	}
