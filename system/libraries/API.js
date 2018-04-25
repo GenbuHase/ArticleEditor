@@ -86,7 +86,11 @@ module.exports = class API {
 	}
 
 	static getArticles () {
-		return fs.readdirSync(CONFIG.PATH.ARTICLE);
+		return fs.readdirSync(CONFIG.PATH.ARTICLE).sort((a, b) => {
+			if (parseInt(a.split(/.json$/)[0]) < parseInt(b.split(/.json$/)[0])) return -1;
+			if (parseInt(a.split(/.json$/)[0]) > parseInt(b.split(/.json$/)[0])) return 1;
+			return 0;
+		});
 	}
 
 	static getMedias (id = 0) {
