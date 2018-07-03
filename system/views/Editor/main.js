@@ -233,6 +233,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	publishAllBtn.addEventListener("click", () => {
 		IO.getArticles(res => {
+			res.articles.forEach((article, index) => res.articles[index] = article.replace(/.json$/, ""));
+
 			for (let articleName in res.articles) {
 				IO.publishArticle(res.articles[articleName], res => {
 					M.toast({ html: `記事ページ(${res.path})が作成されました` });

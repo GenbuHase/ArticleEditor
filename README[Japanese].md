@@ -5,7 +5,7 @@
 ブログ形式サイトのための記事編集ツール
 
 
-## 他の言語 | Other Languages
+## 言語 | Languages
 * [English | 英語](/README.md)
 
 
@@ -24,7 +24,8 @@
 
 
 ## 使用方法 | How to Use
-初回実行時、必要なディレクトリが生成されます。
+初回実行時、必要なディレクトリが自動で生成されます。
+
 1.	`template/index.html`(以下テンプレートHTML)を編集します。<Br />
 	テンプレートHTML内では、以下の特殊変数が利用できます。
 
@@ -40,7 +41,7 @@
 ## インストール方法 | Installation
 以下のコマンドを実行してください。
 
-```
+```Bash
 $ git clone https://github.com/GenbuHase/ArticleEditor.git
 $ cd ArticleEditor
 $ npm install
@@ -49,6 +50,7 @@ $ npm install
 
 ## 設定 | Config
 `system/config.js`はコンフィグファイルとなっております。
+
 ```JavaScript
 {
 	PORT: 起動ポート(Number),
@@ -71,8 +73,12 @@ $ npm install
 
 
 ## 作者 | Author
-[Genbu Hase](https://github.com/GenbuHase)
+* Genbu Hase
+  * [Github](https://github.com/GenbuHase)
+  * [Mastodon(itabashi.0j0.jp)](https://itabashi.0j0.jp/@ProgrammerGenboo)
+  * [Mastodon(knzk.me)](https://knzk.me/@ProgrammerGenboo)
+  * [Google+](https://plus.google.com/106666684430101995501)
 
 
 ## ライセンス | License
-[MIT License](https://github.com/GenbuHase/ArticleEditor/blob/master/LICENSE)
+[MIT License](/LICENSE)
