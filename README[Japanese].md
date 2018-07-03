@@ -81,4 +81,4 @@ $ npm install
 
 
 ## ライセンス | License
-[MIT License](https://github.com/GenbuHase/ArticleEditor/blob/master/LICENSE)
+[MIT License](/LICENSE)
