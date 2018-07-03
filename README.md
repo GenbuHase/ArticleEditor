@@ -2,21 +2,21 @@
 
 [![Build Status](https://travis-ci.org/GenbuHase/ArticleEditor.svg)](https://travis-ci.org/GenbuHase/ArticleEditor)
 
-A tool for bloggers without any blog services
+An assistant for bloggers without blog services
 
 
-## Other Languages
+## Languages
 * [日本語 | Japanese](/README[Japanese].md)
 
 
 ## Description
-You could create any articles easily if you used "Article Editor".
+You could publish articles without a lot of inconvenience if you used "Article Editor".
 
 
 ## Features
-* Generates any articles with a template
-* Manages a list of article ids
-* Runs Smoothly
+* Generate any articles with a template
+* Manage a list of article ids
+* Run smoothly
 
 
 ## Requirement
@@ -25,22 +25,23 @@ You could create any articles easily if you used "Article Editor".
 
 ## How to Use
 Some folders will be generated for the first time.
+
 1.	Edit `template/index.html`(template).<Br />
-	You can provide special variables in it.
+	Special variables are available in the template.
 
 	* `${title}` ... Article's title
 	* `${createdAt}` ... Article's date
 	* `${content}` ... Article's content
 	
-2.	Execute `npm start` to run this tool.
+2.	Execute `npm start` to launch.
 3.	View [http://localhost:8005](http://localhost:8005) after running.
-4.	Create your articles following instructions!
+4.	Feel free to create your articles following instructions!
 
 
 ## Installation
 Execute these commands.
 
-```
+```Bash
 $ git clone https://github.com/GenbuHase/ArticleEditor.git
 $ cd ArticleEditor
 $ npm install
@@ -49,30 +50,35 @@ $ npm install
 
 ## Config
 `system/config.js` is editable.
+
 ```JavaScript
 {
-	PORT: A port this will use(Number),
+	PORT: An used port(Number),
 
 	PATH: {
-		ARTICLE: A directory, contains a collection of article(String),
-		PUBLISH: A directory, contains generated html of article(String),
-		MEDIA: A directory, contains medias that each articles has(String),
-		COMMONMEDIA: A directory, contains common medias(String),
-		TEMPLATE: A directory, contains a template(String)
+		ARTICLE: A directory, containing a collection of articles(String),
+		PUBLISH: A directory, containing generated html of articles(String),
+		MEDIA: A directory, containing medias of each articles(String),
+		COMMONMEDIA: A directory, containing common medias(String),
+		TEMPLATE: A directory, containing a template(String)
 	},
 
-	onCreate: A callback, will be called when an article will be created(Function),
-	onDelete: A callback, will be called when any articles will be deleted(Function),
-	onSave: A callback, will be called when any articles will be drafted(Function),
-	onPublish: A callback, will be called when any pages will be generated(Function),
-	onUpload: A callback, will be called when any medias will be uploaded(Function)
+	onCreate: A callback, called when any articles are created(Function),
+	onDelete: A callback, called when any articles are deleted(Function),
+	onSave: A callback, called when any articles are drafted(Function),
+	onPublish: A callback, called when any pages are generated(Function),
+	onUpload: A callback, called when any medias are uploaded(Function)
 }
 ```
 
 
 ## Author
-[Genbu Hase](https://github.com/GenbuHase)
+* Genbu Hase
+  * [Github](https://github.com/GenbuHase)
+  * [Mastodon(itabashi.0j0.jp)](https://itabashi.0j0.jp/@ProgrammerGenboo)
+  * [Mastodon(knzk.me)](https://knzk.me/@ProgrammerGenboo)
+  * [Google+](https://plus.google.com/106666684430101995501)
 
 
 ## License
-[MIT License](https://github.com/GenbuHase/ArticleEditor/blob/master/LICENSE)
+[MIT License](/LICENSE)

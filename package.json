@@ -1,11 +1,11 @@
 {
 	"name": "article-editor",
 	"version": "1.2.1",
-	"description": "A tool for bloggers without any blog services",
+	"description": "An assistant for bloggers without blog services",
 	"keywords": [
-		"ArticleEditor",
-		"Article",
-		"Blog"
+		"article-editor",
+		"article",
+		"blog"
 	],
 	"repository": {
 		"type": "git",
@@ -16,7 +16,8 @@
 		"url": "https://github.com/GenbuProject/ArticleEditor/issues"
 	},
 	"author": {
-		"name": "Genbu Hase"
+		"name": "Genbu Hase",
+		"url": "https://genbuhase.github.io/"
 	},
 	"license": "MIT",
 	"main": "app.js",
